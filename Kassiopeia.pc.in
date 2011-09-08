@@ -1,0 +1,13 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: Kassiopeia
+Version: @PACKAGE_VERSION@
+URL: https://savannah.fzk.de/projects/katrin/.
+Description: The KATRIN Global Simulation
+
+
+Libs: -L${libdir} -lKSCore -lKSDataStructure -lDAQ  -lGenerators  -lSSC -lTransport -lEMField -lKEMField -lKEMFieldBEM -lKEMFieldDirect -lKEMFieldGeometry -lKEMFieldIO -lKEMFieldMap -lKEMFieldRobinHood -lKEMFieldZHExpansion
+Cflags: -I${includedir}
