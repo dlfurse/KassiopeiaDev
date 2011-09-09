@@ -72,6 +72,11 @@ AS_IF(
 
 #set default prefix to build area
 AC_PREFIX_DEFAULT([`pwd`])
+config_dir='${prefix}/Config'
+data_dir='${prefix}/Data'
+scratch_dir='${prefix}/Data'
+log_dir='.'
+output_dir='.'
 
 #define compiler and linker flags for automake
 AM_CPPFLAGS="$DEFS $DEBUG_FLAGS $ROOT_CPPFLAGS $BOOST_CPPFLAGS -DOPTIONHOME=${sysconfdir} -DDATAHOME=${prefix}/Data" 

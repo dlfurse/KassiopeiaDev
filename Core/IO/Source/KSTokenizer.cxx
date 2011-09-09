@@ -1,10 +1,3 @@
-/*
- * KSXMLTokenizer.cxx
- *
- * created on: Apr 4, 2011
- * author: dlfurse
- */
-
 #include "KSTokenizer.h"
 
 #include "KSTextFile.h"

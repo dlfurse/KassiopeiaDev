@@ -283,39 +283,39 @@ namespace Kassiopeia
 
     Bool_t KSProcessor::ProcessStreamToken( const KSTokenBeginParsing* /*aToken*/)
     {
-        return kFALSE;
+        return kTRUE;
     }
     Bool_t KSProcessor::ProcessStreamToken( const KSTokenEndParsing* /*aToken*/)
     {
-        return kFALSE;
+        return kTRUE;
     }
     Bool_t KSProcessor::ProcessStreamToken( const KSTokenBeginFile* /*aToken*/)
     {
-        return kFALSE;
+        return kTRUE;
     }
     Bool_t KSProcessor::ProcessStreamToken( const KSTokenEndFile* /*aToken*/)
     {
-        return kFALSE;
+        return kTRUE;
     }
     Bool_t KSProcessor::ProcessStreamToken( const KSTokenBeginElement* /*aToken*/)
     {
-        return kFALSE;
+        return kTRUE;
     }
     Bool_t KSProcessor::ProcessStreamToken( const KSTokenEndElement* /*aToken*/)
     {
-        return kFALSE;
+        return kTRUE;
     }
     Bool_t KSProcessor::ProcessStreamToken( const KSTokenAttribute* /*aToken*/)
     {
-        return kFALSE;
+        return kTRUE;
     }
     Bool_t KSProcessor::ProcessStreamToken( const KSTokenData* /*aToken*/)
     {
-        return kFALSE;
+        return kTRUE;
     }
     Bool_t KSProcessor::ProcessStreamToken( const KSTokenError* /*aToken*/)
     {
-        return kFALSE;
+        return kTRUE;
     }
 
     Bool_t KSProcessor::ProcessEndToken( const KSTokenBeginParsing* /*aToken*/)
