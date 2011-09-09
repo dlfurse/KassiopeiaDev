@@ -162,9 +162,12 @@ namespace Kassiopeia
 /////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////
 
+/*
 
 #include "KSBuilderPrototype.h"
 #include "KSGeometryToolbox.h"
+
+*/
 
 /*!
  * @class Kassiopeia::KSBoxBuilder
@@ -172,6 +175,8 @@ namespace Kassiopeia
  *
  * @brief this class builds boxes and puts them in the geometry toolbox
  */
+
+/*
 namespace Kassiopeia
 {
 
@@ -197,6 +202,7 @@ namespace Kassiopeia
     };
 
 }
+*/
 
 #endif /* KSBox_H_ */
 

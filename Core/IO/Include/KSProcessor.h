@@ -40,25 +40,25 @@ namespace Kassiopeia
             virtual void ProcessToken( const KSTokenError* aToken );
 
         protected:
-            virtual Bool_t MidProcessToken( const KSTokenBeginParsing* aToken );
-            virtual Bool_t MidProcessToken( const KSTokenEndParsing* aToken );
-            virtual Bool_t MidProcessToken( const KSTokenBeginFile* aToken );
-            virtual Bool_t MidProcessToken( const KSTokenEndFile* aToken );
-            virtual Bool_t MidProcessToken( const KSTokenBeginElement* aToken );
-            virtual Bool_t MidProcessToken( const KSTokenEndElement* aToken );
-            virtual Bool_t MidProcessToken( const KSTokenAttribute* aToken );
-            virtual Bool_t MidProcessToken( const KSTokenData* aToken );
-            virtual Bool_t MidProcessToken( const KSTokenError* aToken );
+            virtual Bool_t ProcessStreamToken( const KSTokenBeginParsing* aToken );
+            virtual Bool_t ProcessStreamToken( const KSTokenEndParsing* aToken );
+            virtual Bool_t ProcessStreamToken( const KSTokenBeginFile* aToken );
+            virtual Bool_t ProcessStreamToken( const KSTokenEndFile* aToken );
+            virtual Bool_t ProcessStreamToken( const KSTokenBeginElement* aToken );
+            virtual Bool_t ProcessStreamToken( const KSTokenEndElement* aToken );
+            virtual Bool_t ProcessStreamToken( const KSTokenAttribute* aToken );
+            virtual Bool_t ProcessStreamToken( const KSTokenData* aToken );
+            virtual Bool_t ProcessStreamToken( const KSTokenError* aToken );
 
-            virtual Bool_t EndProcessToken( const KSTokenBeginParsing* aToken );
-            virtual Bool_t EndProcessToken( const KSTokenEndParsing* aToken );
-            virtual Bool_t EndProcessToken( const KSTokenBeginFile* aToken );
-            virtual Bool_t EndProcessToken( const KSTokenEndFile* aToken );
-            virtual Bool_t EndProcessToken( const KSTokenBeginElement* aToken );
-            virtual Bool_t EndProcessToken( const KSTokenEndElement* aToken );
-            virtual Bool_t EndProcessToken( const KSTokenAttribute* aToken );
-            virtual Bool_t EndProcessToken( const KSTokenData* aToken );
-            virtual Bool_t EndProcessToken( const KSTokenError* aToken );
+            virtual Bool_t ProcessEndToken( const KSTokenBeginParsing* aToken );
+            virtual Bool_t ProcessEndToken( const KSTokenEndParsing* aToken );
+            virtual Bool_t ProcessEndToken( const KSTokenBeginFile* aToken );
+            virtual Bool_t ProcessEndToken( const KSTokenEndFile* aToken );
+            virtual Bool_t ProcessEndToken( const KSTokenBeginElement* aToken );
+            virtual Bool_t ProcessEndToken( const KSTokenEndElement* aToken );
+            virtual Bool_t ProcessEndToken( const KSTokenAttribute* aToken );
+            virtual Bool_t ProcessEndToken( const KSTokenData* aToken );
+            virtual Bool_t ProcessEndToken( const KSTokenError* aToken );
 
             KSProcessor* fParent;
             KSProcessor* fChild;

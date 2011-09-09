@@ -19,6 +19,7 @@ IO_HEADERFILES = \
 	../Include/KSTokenEndElement.h\
 	../Include/KSTokenAttribute.h\
 	../Include/KSTokenData.h\
+	../Include/KSTokenError.h\
 	../Include/KSProcessor.h\
 	../Include/KSTokenizer.h
 
@@ -34,6 +35,7 @@ IO_SOURCEFILES = \
 	../Source/KSTokenEndElement.cxx\
 	../Source/KSTokenAttribute.cxx\
 	../Source/KSTokenData.cxx\
+	../Source/KSTokenError.cxx\
 	../Source/KSProcessor.cxx\
 	../Source/KSTokenizer.cxx
     

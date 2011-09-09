@@ -5,7 +5,7 @@ VALIDATION_INCLUDES = \
     -I@top_srcdir@/Core/Math/Include\
     -I@top_srcdir@/Core/Messages/Include\
     -I@top_srcdir@/Core/Utility/Include\
-    -I@top_srcdir@/Core/Configuration/Include\
+    -I@top_srcdir@/Core/IO/Include\
     -I@top_srcdir@/Core/Simulation/Include\
     -I@top_srcdir@/TransportModules/Include
 
@@ -50,11 +50,11 @@ TestMessages_CPPFLAGS = $(VALIDATION_COMPILER_FLAGS)
 TestMessages_LDADD = $(VALIDATION_LIBS)
 TestMessages_LDFLAGS = $(VALIDATION_LINKER_FLAGS)
 
-bin_PROGRAMS += TestXMLTokenizer
-TestXMLTokenizer_SOURCES = ../Source/TestXMLTokenizer.cxx
-TestXMLTokenizer_CPPFLAGS = $(VALIDATION_COMPILER_FLAGS)
-TestXMLTokenizer_LDADD = $(VALIDATION_LIBS)
-TestXMLTokenizer_LDFLAGS = $(VALIDATION_LINKER_FLAGS)
+bin_PROGRAMS += TestTokenizer
+TestTokenizer_SOURCES = ../Source/TestTokenizer.cxx
+TestTokenizer_CPPFLAGS = $(VALIDATION_COMPILER_FLAGS)
+TestTokenizer_LDADD = $(VALIDATION_LIBS)
+TestTokenizer_LDFLAGS = $(VALIDATION_LINKER_FLAGS)
 
 bin_PROGRAMS += TestODE
 TestODE_SOURCES = ../Source/TestODE.cxx

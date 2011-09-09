@@ -11,7 +11,7 @@
 
 #include "KSSurface.h"
 
-#include "KSBuilderPrototype.h"
+//#include "KSBuilderPrototype.h"
 //#include "KSGeometryToolbox.h"
 
 /*!

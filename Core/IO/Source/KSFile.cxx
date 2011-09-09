@@ -16,6 +16,16 @@ namespace Kassiopeia
     {
     }
 
+    void KSFile::SetKey( const string& aKey )
+    {
+        fKey = aKey;
+        return;
+    }
+    const string& KSFile::GetKey() const
+    {
+        return fKey;
+    }
+
     void KSFile::AddToBases( const string& aName )
     {
         fBases.push_back( aName );

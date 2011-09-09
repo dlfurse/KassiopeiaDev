@@ -472,6 +472,7 @@ namespace Kassiopeia
 /////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////
 
+/*
 #include "KSBuilderFactoryPrototype.h"
 
 namespace Kassiopeia
@@ -553,18 +554,5 @@ namespace Kassiopeia
         return kTRUE;
     }
 
-//*****************
-
-/*
- void KSBoxBuilder::AssignOpenTags()
- {
- const vector< string >* tOpenTags = fManager->GetOpenTags();
- for( vector< string >::const_iterator tIter = tOpenTags->begin(); tIter != tOpenTags->end(); tIter++ )
- {
- fBox->AssignTag( *tIter );
- }
- return;
- }
- */
-
 }
+*/

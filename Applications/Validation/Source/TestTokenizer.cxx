@@ -1,5 +1,6 @@
-#include "KSXMLTokenizer.h"
-#include "KSXMLReceiver.h"
+#include "KSTextFile.h"
+#include "KSTokenizer.h"
+#include "KSProcessor.h"
 
 #include <iostream>
 using std::cout;
@@ -8,71 +9,76 @@ using std::endl;
 namespace Kassiopeia
 {
 
-    class TestReceiver :
-        public KSReceiver,
-        public KSXMLReceiver
+    class KSTestProcessor :
+        public KSProcessor
     {
         public:
-            TestReceiver()
+            KSTestProcessor()
             {
             }
-            virtual ~TestReceiver()
+            virtual ~KSTestProcessor()
             {
             }
 
-            virtual void ReceiveToken( const KSErrorToken* token )
+        public:
+            virtual const string& GetTypeName() const
             {
-                cout << "got an error token! [error =" << token->GetMessage() << "]" << endl;
-                return;
+                return fTypeName;
             }
-            virtual void ReceiveToken( const KSTokenBeginParsing* token )
+
+        private:
+            static const string fTypeName;
+
+        public:
+            virtual void ProcessToken( const KSTokenBeginParsing* /*token*/ )
             {
                 cout << "got an a begin parsing token." << endl;
                 return;
             }
-            virtual void ReceiveToken( const KSEndParsingToken* token )
+            virtual void ProcessToken( const KSTokenEndParsing* /*token*/ )
             {
                 cout << "got an end parsing token." << endl;
                 return;
             }
-            virtual void ReceiveToken( const KSTokenBeginFile* token )
+            virtual void ProcessToken( const KSTokenBeginFile* token )
             {
-                cout << "got a begin file token." << endl;
+                cout << "got a begin file token [file name = " << token->GetFilename() << "]" << endl;
                 return;
             }
-            virtual void ReceiveToken( const KSTokenEndFile* token )
+            virtual void ProcessToken( const KSTokenEndFile* token )
             {
-                cout << "got an end file token" << endl;
+                cout << "got an end file token [file name = " << token->GetFilename() << "]" << endl;
                 return;
             }
-
-            virtual void ReceiveToken( const KSTokenBeginElement* token )
+            virtual void ProcessToken( const KSTokenBeginElement* token )
             {
                 cout << "got a start element token [element name = " << token->GetElementName() << "]" << endl;
                 return;
             }
-            virtual void ReceiveToken( const KSAttributeToken* token )
-            {
-                cout << "got an attribute token [attribute name = " << token->GetAttributeName() << ", attribute value = " << token->GetAttributeValue() << "]" << endl;
-                return;
-            }
-            virtual void ReceiveToken( const KSTokenEndElement* token )
+            virtual void ProcessToken( const KSTokenEndElement* token )
             {
                 cout << "got an end element token [element name = " << token->GetElementName() << "]" << endl;
                 return;
             }
-            virtual void ReceiveToken( const KSDataToken* token )
+            virtual void ProcessToken( const KSTokenAttribute* token )
+            {
+                cout << "got an attribute token [attribute name = " << token->GetAttributeName() << ", attribute value = " << token->GetAttributeValue() << "]" << endl;
+                return;
+            }
+            virtual void ProcessToken( const KSTokenData* token )
             {
                 cout << "got an area of data:" << endl;
                 cout << "  " << token->GetDataValue() << endl;
                 return;
             }
-            virtual void ReceiveToken( const KSTokenError* token )
+            virtual void ProcessToken( const KSTokenError* token )
             {
-                cout << "got an xml error token! [error = " << token->GetMessage() << "]" << endl;
+                cout << "got an error token! [error = " << token->GetMessage() << "]" << endl;
                 return;
             }
     };
+
+    const string KSTestProcessor::fTypeName = string("TestProcessor");
 
 }
 
@@ -92,11 +98,14 @@ int main( int argc, char** argv )
         FileName = string( argv[1] );
     }
 
+    KSTextFile File;
     KSTokenizer Tokenizer;
-    TestReceiver Receiver;
+    KSTestProcessor Processor;
 
-    Tokenizer.SetReceiver( &Receiver );
-    Tokenizer.Read( FileName );
+    File.AddToPaths( "." );
+    File.AddToBases( FileName );
+    Tokenizer.DropProcessor( &Processor );
+    Tokenizer.ProcessFile( &File );
 
     return 0;
 

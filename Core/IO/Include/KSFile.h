@@ -20,7 +20,7 @@ namespace Kassiopeia
 
         public:
             void SetKey( const string& aKey );
-            const string& GetKey();
+            const string& GetKey() const;
 
             void AddToPaths( const string& aPath );
             void AddToBases( const string& aBase );
