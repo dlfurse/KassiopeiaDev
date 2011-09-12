@@ -1,6 +1,5 @@
 SUBDIRS = \
     Core/Utility/Build\
-    Core/Messages/Build\
     Core/Math/Build\
     Core/Management/Build\
     Core/IO/Build\

@@ -116,7 +116,7 @@ namespace Kassiopeia
         fName = fFile->GetName();
         fLine = 1;
         fColumn = 1;
-        fChar = fFile->File().get();
+        fChar = fFile->File()->get();
 
         fBeginFile->SetFilename( fName );
         ProcessToken( fBeginFile );
@@ -683,7 +683,7 @@ namespace Kassiopeia
 
         //increment the iterator
         //cout << "popping the iterator" << endl;
-        fChar = fFile->File().get();
+        fChar = fFile->File()->get();
 
         //make sure that incrementing didn't put the iterator at the end
         if( AtEnd() )
@@ -701,7 +701,7 @@ namespace Kassiopeia
     Bool_t KSTokenizer::AtEnd()
     {
         //if iterator is at EOF, return kTRUE
-        if( fFile->File().eof() == kTRUE )
+        if( fFile->File()->eof() == kTRUE )
         {
             return kTRUE;
         }

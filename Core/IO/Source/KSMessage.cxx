@@ -7,18 +7,11 @@
 
 #include "KSMessage.h"
 
-#include "KSMessageHandler.h"
-
 namespace Kassiopeia
 {
 
-    KSMessage::KSMessage() :
-        fSeverity(eWarning),
-        fOrigin(),
-        fLine(),
-        fMessage()
+    KSMessage::KSMessage()
     {
-        fLine.precision(20);
     }
     KSMessage::~KSMessage()
     {

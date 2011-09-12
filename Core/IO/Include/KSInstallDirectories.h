@@ -1,0 +1,5 @@
+#define KASSIOPEIA_INSTALL_CONFIG_DIR "config_dir"
+#define KASSIOPEIA_INSTALL_DATA_DIR "data_dir"
+#define KASSIOPEIA_INSTALL_SCRATCH_DIR "scratch_dir"
+#define KASSIOPEIA_INSTALL_OUTPUT_DIR "output_dir"
+#define KASSIOPEIA_INSTALL_LOG_DIR "log_dir"

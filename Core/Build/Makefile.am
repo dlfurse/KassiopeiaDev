@@ -12,7 +12,6 @@ libKassiopeiaCore_la_LIBADD = \
     ../Utility/Build/libUtility.la\
     ../Math/Build/libKassiopeiaMath.la\
     ../Management/Build/libKassiopeiaManagement.la\
-    ../Messages/Build/libKassiopeiaMessages.la\
     ../IO/Build/libKassiopeiaIO.la\
     ../Simulation/Build/libKassiopeiaSimulation.la\
     ../Geometry/Build/libKassiopeiaGeometry.la

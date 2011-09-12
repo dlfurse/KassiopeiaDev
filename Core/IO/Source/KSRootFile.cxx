@@ -1,17 +1,17 @@
-#include "KSTextFile.h"
+#include "KSRootFile.h"
 
 namespace Kassiopeia
 {
 
-    KSTextFile::KSTextFile() :
+    KSRootFile::KSRootFile() :
         fFile( NULL )
     {
     }
-    KSTextFile::~KSTextFile()
+    KSRootFile::~KSRootFile()
     {
     }
 
-    Bool_t KSTextFile::Open( Mode aMode )
+    Bool_t KSRootFile::Open( Mode aMode )
     {
         vector< string >::iterator BaseIt;
         vector< string >::iterator PathIt;
@@ -21,18 +21,18 @@ namespace Kassiopeia
             {
                 if( aMode == eRead )
                 {
-                    fFile = new fstream( (*PathIt + fDirectoryMark + *BaseIt).c_str(), ios_base::in );
+                    fFile = new TFile( (*PathIt + fDirectoryMark + *BaseIt).c_str(), "READ" );
                 }
                 if( aMode == eWrite )
                 {
-                    fFile = new fstream( (*PathIt + fDirectoryMark + *BaseIt).c_str(), ios_base::out );
+                    fFile = new TFile( (*PathIt + fDirectoryMark + *BaseIt).c_str(), "RECREATE" );
                 }
                 if( aMode == eAppend )
                 {
-                    fFile = new fstream( (*PathIt + fDirectoryMark + *BaseIt).c_str(), ios_base::app );
+                    fFile = new TFile( (*PathIt + fDirectoryMark + *BaseIt).c_str(), "UPDATE" );
                 }
 
-                if( fFile->fail() == kTRUE )
+                if( fFile->IsZombie() == kTRUE )
                 {
                     delete fFile;
                     fFile = NULL;
@@ -44,7 +44,7 @@ namespace Kassiopeia
                 fResolvedName = *PathIt + fDirectoryMark + *BaseIt;
 
                 //iomsg = eMessage;
-                //iomsg < "KSTextFile::Open";
+                //iomsg < "KSRootFile::Open";
                 //iomsg << "key <" << fKey << "> successfully associated with file <" << fResolvedPath << fDirectoryMark << fResolvedName << ">" << end;
                 return kTRUE;
 
@@ -52,15 +52,15 @@ namespace Kassiopeia
         }
 
         //iomsg = eWarning;
-        //iomsg < "KSTextFile::Open";
+        //iomsg < "KSRootFile::Open";
         //iomsg << "key <" << fKey << "> could not be associated with any file" << end;
         return kFALSE;
     }
-    Bool_t KSTextFile::Close()
+    Bool_t KSRootFile::Close()
     {
         if( fFile != NULL )
         {
-            fFile->close();
+            fFile->Close();
             delete fFile;
             fFile = NULL;
 
@@ -69,7 +69,7 @@ namespace Kassiopeia
         return kFALSE;
     }
 
-    fstream* KSTextFile::File()
+    TFile* KSRootFile::File()
     {
         return fFile;
     }

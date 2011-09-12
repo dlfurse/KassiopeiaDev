@@ -21,7 +21,7 @@ namespace Kassiopeia
             virtual Bool_t Open( Mode aMode );
             virtual Bool_t Close();
 
-            fstream& File();
+            fstream* File();
 
         private:
             fstream* fFile;

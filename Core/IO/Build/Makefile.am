@@ -12,6 +12,7 @@ IO_HEADERFILES = \
 	../Include/KSInstallDirectories.h\
 	../Include/KSFile.h\
 	../Include/KSTextFile.h\
+	../Include/KSRootFile.h\
 	../Include/KSToken.h\
 	../Include/KSTokenBeginParsing.h\
 	../Include/KSTokenEndParsing.h\
@@ -29,6 +30,7 @@ IO_HEADERFILES = \
 IO_SOURCEFILES = \
 	../Source/KSFile.cxx\
 	../Source/KSTextFile.cxx\
+	../Source/KSRootFile.cxx\
 	../Source/KSToken.cxx\
 	../Source/KSTokenBeginParsing.cxx\
 	../Source/KSTokenEndParsing.cxx\
