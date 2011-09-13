@@ -16,7 +16,7 @@ namespace Kassiopeia
     {
         if( fMap != 0 )
         {
-            ParticleMap::iterator MapIt;
+            ParticleMapIt MapIt;
             for( MapIt = fMap->begin(); MapIt != fMap->end(); MapIt++ )
             {
                 if( MapIt->second != NULL )
