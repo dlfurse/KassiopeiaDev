@@ -22,7 +22,11 @@ TRANSPORTMODULES_HEADERFILES = \
 	../Include/KTrackProcess.h\
 	../Include/KTrackProcessPropagation.h\
 	../Include/KTrackStepSize.h\
-	../Include/KTrackStepSizeCyclotron.h
+	../Include/KTrackStepSizeCyclotron.h\
+	../Include/KTrackStepSizeFix.h\
+	../Include/KTrackStepSizeConst.h\
+	../Include/KTrackStepSizeEnergy.h\
+	../Include/KTrackStepSizeNumError.h
 
 TRANSPORTMODULES_SOURCEFILES = \
 	../Source/KTrackODE.cxx\
@@ -36,7 +40,11 @@ TRANSPORTMODULES_SOURCEFILES = \
 	../Source/KTrackProcess.cxx\
 	../Source/KTrackProcessPropagation.cxx\
 	../Source/KTrackStepSize.cxx\
-	../Source/KTrackStepSizeCyclotron.cxx
+	../Source/KTrackStepSizeCyclotron.cxx\
+	../Source/KTrackStepSizeFix.cxx\
+	../Source/KTrackStepSizeConst.cxx\
+	../Source/KTrackStepSizeEnergy.cxx\
+	../Source/KTrackStepSizeNumError.cxx
     
 include_HEADERS = \
     $(TRANSPORTMODULES_HEADERFILES)

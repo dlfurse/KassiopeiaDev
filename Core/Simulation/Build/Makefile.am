@@ -6,7 +6,8 @@ SIMULATION_INCLUDES = \
 	-I@top_srcdir@/Core/Utility/Include\
 	-I@top_srcdir@/Core/IO/Include\
 	-I@top_srcdir@/Core/Math/Include\
-	-I@top_srcdir@/Core/Simulation/Include
+	-I@top_srcdir@/Core/Simulation/Include\
+	-I@top_srcdir@/Core/IO/Include
 
 SIMULATION_HEADERFILES = \
 	../Include/KSElectricField.h\
