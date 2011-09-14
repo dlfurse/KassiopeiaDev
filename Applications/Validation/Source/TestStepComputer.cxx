@@ -5,8 +5,8 @@
  * author: dlfurse
  */
 
-#include "KSMessage.h"
-#include "KSMessageHandler.h"
+//#include "KSMessage.h"
+//#include "KSMessageHandler.h"
 
 #include "KSStep.h"
 #include "KSParticle.h"
@@ -235,7 +235,7 @@ int main()
 
     //main loop
 
-    KSMessageHandler::GetInstance()->SetTerminalVerbosity( eDebug );
+    //KSMessageHandler::GetInstance()->SetTerminalVerbosity( eDebug );
 
     InitialParticle->SetPosition( 1.5e-3, 0., -1.5e-3 );
     InitialParticle->SetMomentum( 0., 1., 0. );

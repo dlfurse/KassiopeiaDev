@@ -1,6 +1,8 @@
+#include "KSIOToolbox.h"
 #include "KSTextFile.h"
 #include "KSTokenizer.h"
 #include "KSProcessor.h"
+#include "KSIncludeProcessor.h"
 
 #include <iostream>
 using std::cout;
@@ -8,7 +10,6 @@ using std::endl;
 
 namespace Kassiopeia
 {
-
     class KSTestProcessor :
         public KSProcessor
     {
@@ -21,21 +22,12 @@ namespace Kassiopeia
             }
 
         public:
-            virtual const string& GetTypeName() const
+            virtual void ProcessToken( const KSTokenBeginParsing* /*token*/)
             {
-                return fTypeName;
-            }
-
-        private:
-            static const string fTypeName;
-
-        public:
-            virtual void ProcessToken( const KSTokenBeginParsing* /*token*/ )
-            {
-                cout << "got an a begin parsing token." << endl;
+                cout << "got a begin parsing token." << endl;
                 return;
             }
-            virtual void ProcessToken( const KSTokenEndParsing* /*token*/ )
+            virtual void ProcessToken( const KSTokenEndParsing* /*token*/)
             {
                 cout << "got an end parsing token." << endl;
                 return;
@@ -77,9 +69,6 @@ namespace Kassiopeia
                 return;
             }
     };
-
-    const string KSTestProcessor::fTypeName = string("TestProcessor");
-
 }
 
 using namespace Kassiopeia;
@@ -87,26 +76,39 @@ using namespace Kassiopeia;
 int main( int argc, char** argv )
 {
     string FileName;
+    string IncludedFileName;
 
-    if( argc < 2 )
+    if( argc < 3 )
     {
-        cout << "give me an xml file name" << endl;
+        cout << "i can display the contents of xml files that include each other." << endl;
+        cout << "give me an two xml file names please, one that uses the <include> tag to include the other!" << endl;
         return -1;
     }
     else
     {
         FileName = string( argv[1] );
+        IncludedFileName = string( argv[2] );
     }
 
+    KSIOToolbox::GetInstance()->SetTerminalVerbosity(10);
+
     KSTextFile File;
+    File.SetKey( "InputFile" );
+    File.AddToNames( FileName );
+    KSIOToolbox::GetInstance()->AddConfigTextFile( &File );
+
+    KSTextFile IncludedFile;
+    IncludedFile.SetKey( "FirstInclude" );
+    IncludedFile.AddToNames( IncludedFileName );
+    KSIOToolbox::GetInstance()->AddConfigTextFile( &IncludedFile );
+
     KSTokenizer Tokenizer;
+    KSIncludeProcessor IncludeProcessor;
     KSTestProcessor Processor;
 
-    File.AddToPaths( "." );
-    File.AddToBases( FileName );
+    Tokenizer.DropProcessor( &IncludeProcessor );
     Tokenizer.DropProcessor( &Processor );
     Tokenizer.ProcessFile( &File );
 
     return 0;
-
 }

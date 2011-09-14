@@ -24,8 +24,6 @@ namespace Kassiopeia
             KSProcessor();
             virtual ~KSProcessor();
 
-            virtual const string& GetTypeName() const = 0;
-
             void DropProcessor( KSProcessor* aNewProcessor );
             void LiftProcessor( KSProcessor* anOldProcessor );
 

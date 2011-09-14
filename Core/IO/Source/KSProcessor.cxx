@@ -1,5 +1,6 @@
 #include "KSProcessor.h"
 
+#include "KSIOMessage.h"
 #include "KSTokenizer.h"
 
 //#include <iostream>
@@ -52,10 +53,10 @@ namespace Kassiopeia
         {
             if( ProcessEndToken( aToken ) == kFALSE )
             {
-                //iomsg = eError;
-                //iomsg < GetTypeName() + "::ReceiveToken";
-                //iomsg << "got unknown token: " << ret;
-                //iomsg << "in file <" << fTokenizer->GetFileName() << "> at line <" << fTokenizer->GetFileLine() << ">, column <" << fTokenizer->GetFileColumn() << ">" << end;
+                iomsg + eError;
+                iomsg < "KSProcessor::ReceiveToken" < end;
+                iomsg << "got unknown token: " << ret;
+                iomsg << "in path <" << fTokenizer->GetFilePath() << "in file <" << fTokenizer->GetFileName() << "> at line <" << fTokenizer->GetFileLine() << ">, column <" << fTokenizer->GetFileColumn() << ">" << end;
             }
             return;
         }
@@ -63,10 +64,10 @@ namespace Kassiopeia
         {
             if( ProcessStreamToken( aToken ) == kFALSE )
             {
-                //iomsg = eError;
-                //iomsg < GetTypeName() + "::ReceiveToken";
-                //iomsg << "got unknown token: " << ret;
-                //iomsg << "in file <" << fTokenizer->GetFileName() << "> at line <" << fTokenizer->GetFileLine() << ">, column <" << fTokenizer->GetFileColumn() << ">" << end;
+                iomsg + eError;
+                iomsg < "KSProcessor::ReceiveToken" < end;
+                iomsg << "got unknown token: " << ret;
+                iomsg << "in path <" << fTokenizer->GetFilePath() << "in file <" << fTokenizer->GetFileName() << "> at line <" << fTokenizer->GetFileLine() << ">, column <" << fTokenizer->GetFileColumn() << ">" << end;
             }
             fChild->ProcessToken( aToken );
             return;
@@ -78,10 +79,10 @@ namespace Kassiopeia
         {
             if( ProcessEndToken( aToken ) == kFALSE )
             {
-                //iomsg = eError;
-                //iomsg < GetTypeName() + "::ReceiveToken";
-                //iomsg << "got unknown token: " << ret;
-                //iomsg << "in file <" << fTokenizer->GetFileName() << "> at line <" << fTokenizer->GetFileLine() << ">, column <" << fTokenizer->GetFileColumn() << ">" << end;
+                iomsg + eError;
+                iomsg < "KSProcessor::ReceiveToken" < end;
+                iomsg << "got unknown token: " << ret;
+                iomsg << "in path <" << fTokenizer->GetFilePath() << "in file <" << fTokenizer->GetFileName() << "> at line <" << fTokenizer->GetFileLine() << ">, column <" << fTokenizer->GetFileColumn() << ">" << end;
             }
             return;
         }
@@ -89,10 +90,10 @@ namespace Kassiopeia
         {
             if( ProcessStreamToken( aToken ) == kFALSE )
             {
-                //iomsg = eError;
-                //iomsg < GetTypeName() + "::ReceiveToken";
-                //iomsg << "got unknown token: " << ret;
-                //iomsg << "in file <" << fTokenizer->GetFileName() << "> at line <" << fTokenizer->GetFileLine() << ">, column <" << fTokenizer->GetFileColumn() << ">" << end;
+                iomsg + eError;
+                iomsg < "KSProcessor::ReceiveToken" < end;
+                iomsg << "got unknown token: " << ret;
+                iomsg << "in path <" << fTokenizer->GetFilePath() << "in file <" << fTokenizer->GetFileName() << "> at line <" << fTokenizer->GetFileLine() << ">, column <" << fTokenizer->GetFileColumn() << ">" << end;
             }
             fChild->ProcessToken( aToken );
             return;
@@ -104,10 +105,10 @@ namespace Kassiopeia
         {
             if( ProcessEndToken( aToken ) == kFALSE )
             {
-                //iomsg = eError;
-                //iomsg < GetTypeName() + "::ReceiveToken";
-                //iomsg << "got unknown token: " << ret;
-                //iomsg << "in file <" << fTokenizer->GetFileName() << "> at line <" << fTokenizer->GetFileLine() << ">, column <" << fTokenizer->GetFileColumn() << ">" << end;
+                iomsg + eError;
+                iomsg < "KSProcessor::ReceiveToken" < end;
+                iomsg << "got unknown token: " << ret;
+                iomsg << "in path <" << fTokenizer->GetFilePath() << "in file <" << fTokenizer->GetFileName() << "> at line <" << fTokenizer->GetFileLine() << ">, column <" << fTokenizer->GetFileColumn() << ">" << end;
             }
             return;
         }
@@ -115,10 +116,10 @@ namespace Kassiopeia
         {
             if( ProcessStreamToken( aToken ) == kFALSE )
             {
-                //iomsg = eError;
-                //iomsg < GetTypeName() + "::ReceiveToken";
-                //iomsg << "got unknown token: " << ret;
-                //iomsg << "in file <" << fTokenizer->GetFileName() << "> at line <" << fTokenizer->GetFileLine() << ">, column <" << fTokenizer->GetFileColumn() << ">" << end;
+                iomsg + eError;
+                iomsg < "KSProcessor::ReceiveToken" < end;
+                iomsg << "got unknown token: " << ret;
+                iomsg << "in path <" << fTokenizer->GetFilePath() << "in file <" << fTokenizer->GetFileName() << "> at line <" << fTokenizer->GetFileLine() << ">, column <" << fTokenizer->GetFileColumn() << ">" << end;
             }
             fChild->ProcessToken( aToken );
             return;
@@ -130,10 +131,10 @@ namespace Kassiopeia
         {
             if( ProcessEndToken( aToken ) == kFALSE )
             {
-                //iomsg = eError;
-                //iomsg < GetTypeName() + "::ReceiveToken";
-                //iomsg << "got unknown token: " << ret;
-                //iomsg << "in file <" << fTokenizer->GetFileName() << "> at line <" << fTokenizer->GetFileLine() << ">, column <" << fTokenizer->GetFileColumn() << ">" << end;
+                iomsg + eError;
+                iomsg < "KSProcessor::ReceiveToken" < end;
+                iomsg << "got unknown token: " << ret;
+                iomsg << "in path <" << fTokenizer->GetFilePath() << "in file <" << fTokenizer->GetFileName() << "> at line <" << fTokenizer->GetFileLine() << ">, column <" << fTokenizer->GetFileColumn() << ">" << end;
             }
             return;
         }
@@ -141,10 +142,10 @@ namespace Kassiopeia
         {
             if( ProcessStreamToken( aToken ) == kFALSE )
             {
-                //iomsg = eError;
-                //iomsg < GetTypeName() + "::ReceiveToken";
-                //iomsg << "got unknown token: " << ret;
-                //iomsg << "in file <" << fTokenizer->GetFileName() << "> at line <" << fTokenizer->GetFileLine() << ">, column <" << fTokenizer->GetFileColumn() << ">" << end;
+                iomsg + eError;
+                iomsg < "KSProcessor::ReceiveToken" < end;
+                iomsg << "got unknown token: " << ret;
+                iomsg << "in path <" << fTokenizer->GetFilePath() << "in file <" << fTokenizer->GetFileName() << "> at line <" << fTokenizer->GetFileLine() << ">, column <" << fTokenizer->GetFileColumn() << ">" << end;
             }
             fChild->ProcessToken( aToken );
             return;
@@ -156,10 +157,10 @@ namespace Kassiopeia
         {
             if( ProcessEndToken( aToken ) == kFALSE )
             {
-                //iomsg = eError;
-                //iomsg < GetTypeName() + "::ReceiveToken";
-                //iomsg << "got unknown token: " << ret;
-                //iomsg << "in file <" << fTokenizer->GetFileName() << "> at line <" << fTokenizer->GetFileLine() << ">, column <" << fTokenizer->GetFileColumn() << ">" << end;
+                iomsg + eError;
+                iomsg < "KSProcessor::ReceiveToken" < end;
+                iomsg << "got unknown token: " << ret;
+                iomsg << "in path <" << fTokenizer->GetFilePath() << "in file <" << fTokenizer->GetFileName() << "> at line <" << fTokenizer->GetFileLine() << ">, column <" << fTokenizer->GetFileColumn() << ">" << end;
             }
             return;
         }
@@ -167,10 +168,10 @@ namespace Kassiopeia
         {
             if( ProcessStreamToken( aToken ) == kFALSE )
             {
-                //iomsg = eError;
-                //iomsg < GetTypeName() + "::ReceiveToken";
-                //iomsg << "got unknown token: " << ret;
-                //iomsg << "in file <" << fTokenizer->GetFileName() << "> at line <" << fTokenizer->GetFileLine() << ">, column <" << fTokenizer->GetFileColumn() << ">" << end;
+                iomsg + eError;
+                iomsg < "KSProcessor::ReceiveToken" < end;
+                iomsg << "got unknown token: " << ret;
+                iomsg << "in path <" << fTokenizer->GetFilePath() << "in file <" << fTokenizer->GetFileName() << "> at line <" << fTokenizer->GetFileLine() << ">, column <" << fTokenizer->GetFileColumn() << ">" << end;
             }
             fChild->ProcessToken( aToken );
             return;
@@ -182,10 +183,10 @@ namespace Kassiopeia
         {
             if( ProcessEndToken( aToken ) == kFALSE )
             {
-                //iomsg = eError;
-                //iomsg < GetTypeName() + "::ReceiveToken";
-                //iomsg << "got unknown token: " << ret;
-                //iomsg << "in file <" << fTokenizer->GetFileName() << "> at line <" << fTokenizer->GetFileLine() << ">, column <" << fTokenizer->GetFileColumn() << ">" << end;
+                iomsg + eError;
+                iomsg < "KSProcessor::ReceiveToken" < end;
+                iomsg << "got unknown token: " << ret;
+                iomsg << "in path <" << fTokenizer->GetFilePath() << "in file <" << fTokenizer->GetFileName() << "> at line <" << fTokenizer->GetFileLine() << ">, column <" << fTokenizer->GetFileColumn() << ">" << end;
             }
             return;
         }
@@ -193,10 +194,10 @@ namespace Kassiopeia
         {
             if( ProcessStreamToken( aToken ) == kFALSE )
             {
-                //iomsg = eError;
-                //iomsg < GetTypeName() + "::ReceiveToken";
-                //iomsg << "got unknown token: " << ret;
-                //iomsg << "in file <" << fTokenizer->GetFileName() << "> at line <" << fTokenizer->GetFileLine() << ">, column <" << fTokenizer->GetFileColumn() << ">" << end;
+                iomsg + eError;
+                iomsg < "KSProcessor::ReceiveToken" < end;
+                iomsg << "got unknown token: " << ret;
+                iomsg << "in path <" << fTokenizer->GetFilePath() << "in file <" << fTokenizer->GetFileName() << "> at line <" << fTokenizer->GetFileLine() << ">, column <" << fTokenizer->GetFileColumn() << ">" << end;
             }
             fChild->ProcessToken( aToken );
             return;
@@ -208,10 +209,10 @@ namespace Kassiopeia
         {
             if( ProcessEndToken( aToken ) == kFALSE )
             {
-                //iomsg = eError;
-                //iomsg < GetTypeName() + "::ReceiveToken";
-                //iomsg << "got unknown token: " << ret;
-                //iomsg << "in file <" << fTokenizer->GetFileName() << "> at line <" << fTokenizer->GetFileLine() << ">, column <" << fTokenizer->GetFileColumn() << ">" << end;
+                iomsg + eError;
+                iomsg < "KSProcessor::ReceiveToken" < end;
+                iomsg << "got unknown token: " << ret;
+                iomsg << "in path <" << fTokenizer->GetFilePath() << "in file <" << fTokenizer->GetFileName() << "> at line <" << fTokenizer->GetFileLine() << ">, column <" << fTokenizer->GetFileColumn() << ">" << end;
             }
             return;
         }
@@ -219,10 +220,10 @@ namespace Kassiopeia
         {
             if( ProcessStreamToken( aToken ) == kFALSE )
             {
-                //iomsg = eError;
-                //iomsg < GetTypeName() + "::ReceiveToken";
-                //iomsg << "got unknown token: " << ret;
-                //iomsg << "in file <" << fTokenizer->GetFileName() << "> at line <" << fTokenizer->GetFileLine() << ">, column <" << fTokenizer->GetFileColumn() << ">" << end;
+                iomsg + eError;
+                iomsg < "KSProcessor::ReceiveToken" < end;
+                iomsg << "got unknown token: " << ret;
+                iomsg << "in path <" << fTokenizer->GetFilePath() << "in file <" << fTokenizer->GetFileName() << "> at line <" << fTokenizer->GetFileLine() << ">, column <" << fTokenizer->GetFileColumn() << ">" << end;
             }
             fChild->ProcessToken( aToken );
             return;
@@ -234,10 +235,10 @@ namespace Kassiopeia
         {
             if( ProcessEndToken( aToken ) == kFALSE )
             {
-                //iomsg = eError;
-                //iomsg < GetTypeName() + "::ReceiveToken";
-                //iomsg << "got unknown token: " << ret;
-                //iomsg << "in file <" << fTokenizer->GetFileName() << "> at line <" << fTokenizer->GetFileLine() << ">, column <" << fTokenizer->GetFileColumn() << ">" << end;
+                iomsg + eError;
+                iomsg < "KSProcessor::ReceiveToken" < end;
+                iomsg << "got unknown token: " << ret;
+                iomsg << "in path <" << fTokenizer->GetFilePath() << "in file <" << fTokenizer->GetFileName() << "> at line <" << fTokenizer->GetFileLine() << ">, column <" << fTokenizer->GetFileColumn() << ">" << end;
             }
             return;
         }
@@ -245,10 +246,10 @@ namespace Kassiopeia
         {
             if( ProcessStreamToken( aToken ) == kFALSE )
             {
-                //iomsg = eError;
-                //iomsg < GetTypeName() + "::ReceiveToken";
-                //iomsg << "got unknown token: " << ret;
-                //iomsg << "in file <" << fTokenizer->GetFileName() << "> at line <" << fTokenizer->GetFileLine() << ">, column <" << fTokenizer->GetFileColumn() << ">" << end;
+                iomsg + eError;
+                iomsg < "KSProcessor::ReceiveToken" < end;
+                iomsg << "got unknown token: " << ret;
+                iomsg << "in path <" << fTokenizer->GetFilePath() << "in file <" << fTokenizer->GetFileName() << "> at line <" << fTokenizer->GetFileLine() << ">, column <" << fTokenizer->GetFileColumn() << ">" << end;
             }
             fChild->ProcessToken( aToken );
             return;
@@ -260,10 +261,10 @@ namespace Kassiopeia
         {
             if( ProcessEndToken( aToken ) == kFALSE )
             {
-                //iomsg = eError;
-                //iomsg < GetTypeName() + "::ReceiveToken";
-                //iomsg << "got unknown token: " << ret;
-                //iomsg << "in file <" << fTokenizer->GetFileName() << "> at line <" << fTokenizer->GetFileLine() << ">, column <" << fTokenizer->GetFileColumn() << ">" << end;
+                iomsg + eError;
+                iomsg < "KSProcessor::ReceiveToken" < end;
+                iomsg << "got unknown token: " << ret;
+                iomsg << "in path <" << fTokenizer->GetFilePath() << "in file <" << fTokenizer->GetFileName() << "> at line <" << fTokenizer->GetFileLine() << ">, column <" << fTokenizer->GetFileColumn() << ">" << end;
             }
             return;
         }
@@ -271,10 +272,10 @@ namespace Kassiopeia
         {
             if( ProcessStreamToken( aToken ) == kFALSE )
             {
-                //iomsg = eError;
-                //iomsg < GetTypeName() + "::ReceiveToken";
-                //iomsg << "got unknown token: " << ret;
-                //iomsg << "in file <" << fTokenizer->GetFileName() << "> at line <" << fTokenizer->GetFileLine() << ">, column <" << fTokenizer->GetFileColumn() << ">" << end;
+                iomsg + eError;
+                iomsg < "KSProcessor::ReceiveToken" < end;
+                iomsg << "got unknown token: " << ret;
+                iomsg << "in path <" << fTokenizer->GetFilePath() << "in file <" << fTokenizer->GetFileName() << "> at line <" << fTokenizer->GetFileLine() << ">, column <" << fTokenizer->GetFileColumn() << ">" << end;
             }
             fChild->ProcessToken( aToken );
             return;
@@ -320,39 +321,39 @@ namespace Kassiopeia
 
     Bool_t KSProcessor::ProcessEndToken( const KSTokenBeginParsing* /*aToken*/)
     {
-        return kFALSE;
+        return kTRUE;
     }
     Bool_t KSProcessor::ProcessEndToken( const KSTokenEndParsing* /*aToken*/)
     {
-        return kFALSE;
+        return kTRUE;
     }
     Bool_t KSProcessor::ProcessEndToken( const KSTokenBeginFile* /*aToken*/)
     {
-        return kFALSE;
+        return kTRUE;
     }
     Bool_t KSProcessor::ProcessEndToken( const KSTokenEndFile* /*aToken*/)
     {
-        return kFALSE;
+        return kTRUE;
     }
     Bool_t KSProcessor::ProcessEndToken( const KSTokenBeginElement* /*aToken*/)
     {
-        return kFALSE;
+        return kTRUE;
     }
     Bool_t KSProcessor::ProcessEndToken( const KSTokenEndElement* /*aToken*/)
     {
-        return kFALSE;
+        return kTRUE;
     }
     Bool_t KSProcessor::ProcessEndToken( const KSTokenAttribute* /*aToken*/)
     {
-        return kFALSE;
+        return kTRUE;
     }
     Bool_t KSProcessor::ProcessEndToken( const KSTokenData* /*aToken*/)
     {
-        return kFALSE;
+        return kTRUE;
     }
     Bool_t KSProcessor::ProcessEndToken( const KSTokenError* /*aToken*/)
     {
-        return kFALSE;
+        return kTRUE;
     }
 
 } /* namespace Kassiopeia */

@@ -10,6 +10,7 @@ IO_INCLUDES =  \
 
 IO_HEADERFILES = \
 	../Include/KSInstallDirectories.h\
+	../Include/KSMessage.h\
 	../Include/KSFile.h\
 	../Include/KSTextFile.h\
 	../Include/KSRootFile.h\
@@ -24,10 +25,13 @@ IO_HEADERFILES = \
 	../Include/KSTokenData.h\
 	../Include/KSTokenError.h\
 	../Include/KSProcessor.h\
+	../Include/KSIncludeProcessor.h\
 	../Include/KSTokenizer.h\
-	../Include/KSIOToolbox.h
+	../Include/KSIOToolbox.h\
+	../Include/KSIOMessage.h
 
 IO_SOURCEFILES = \
+	../Source/KSMessage.cxx\
 	../Source/KSFile.cxx\
 	../Source/KSTextFile.cxx\
 	../Source/KSRootFile.cxx\
@@ -42,8 +46,10 @@ IO_SOURCEFILES = \
 	../Source/KSTokenData.cxx\
 	../Source/KSTokenError.cxx\
 	../Source/KSProcessor.cxx\
+	../Source/KSIncludeProcessor.cxx\
 	../Source/KSTokenizer.cxx\
-	../Source/KSIOToolbox.cxx
+	../Source/KSIOToolbox.cxx\
+	../Source/KSIOMessage.cxx
     
 include_HEADERS = \
     $(IO_HEADERFILES)
@@ -62,7 +68,7 @@ libKassiopeiaIO_la_SOURCES = \
 ###########################################
 
 ../Include/KSInstallDirectories.h: ./KSInstallDirectories.template.h
-	cat $? | sed 's/install_config_dir/$(config_dir)/g' | sed 's/install_data_dir/$(data_dir)/g' | sed 's/install_scratch_dir/${scratch_dir}/g' | sed 's/install_log_dir/${log_dir}/g' | sed 's/install_output_dir/${output_dir}/g' > $@
+	cat $? | sed 's/config_dir/$(config_dir)/g' | sed 's/data_dir/$(data_dir)/g' | sed 's/scratch_dir/${scratch_dir}/g' | sed 's/log_dir/${log_dir}/g' | sed 's/output_dir/${output_dir}/g' > $@
 
 ###########################################
 

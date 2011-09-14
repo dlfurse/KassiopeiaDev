@@ -1,6 +1,6 @@
 //XXX attention! this program is only temporary for debugging purposes in the disaster branch
 
-#include "KSMessage.h"
+//#include "KSMessage.h"
 
 #include "KMathODE.h"
 
@@ -67,7 +67,7 @@ int main( int argc, char** argv )
 {
 
     cout.precision( 20 );
-    KSMessageHandler::GetInstance()->SetTerminalVerbosity( eDebug );
+    //KSMessageHandler::GetInstance()->SetTerminalVerbosity( eDebug );
 
     if( argc < 4 )
     {

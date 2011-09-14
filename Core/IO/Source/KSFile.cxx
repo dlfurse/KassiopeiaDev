@@ -1,5 +1,9 @@
 #include "KSFile.h"
 
+#include <iostream>
+using std::cout;
+using std::endl;
+
 namespace Kassiopeia
 {
 
@@ -9,7 +13,8 @@ namespace Kassiopeia
         fBases(),
         fResolvedPath( "" ),
         fResolvedBase( "" ),
-        fResolvedName( "" )
+        fResolvedName( "" ),
+        fState( eClosed )
     {
     }
     KSFile::~KSFile()
@@ -26,9 +31,14 @@ namespace Kassiopeia
         return fKey;
     }
 
-    void KSFile::AddToBases( const string& aName )
+    void KSFile::AddToNames( const string& aName )
     {
-        fBases.push_back( aName );
+        fNames.push_back( aName );
+        return;
+    }
+    void KSFile::AddToBases( const string& aBase )
+    {
+        fBases.push_back( aBase );
         return;
     }
     void KSFile::AddToPaths( const string& aPath )
@@ -48,6 +58,56 @@ namespace Kassiopeia
     const string& KSFile::GetName() const
     {
         return fResolvedName;
+    }
+
+    Bool_t KSFile::Open( Mode aMode )
+    {
+        if( fState == eClosed )
+        {
+            if( OpenFileSubclass( aMode ) == kTRUE )
+            {
+                fState = eOpen;
+                return kTRUE;
+            }
+            else
+            {
+                return kFALSE;
+            }
+        }
+        return kTRUE;
+    }
+    Bool_t KSFile::IsOpen()
+    {
+        if( fState == eOpen )
+        {
+            return kTRUE;
+        }
+        return kFALSE;
+    }
+
+    Bool_t KSFile::Close()
+    {
+        if( fState == eOpen )
+        {
+            if( CloseFileSubclass() == kTRUE )
+            {
+                fState = eClosed;
+                return kTRUE;
+            }
+            else
+            {
+                return kFALSE;
+            }
+        }
+        return kTRUE;
+    }
+    Bool_t KSFile::IsClosed()
+    {
+        if( fState == eClosed )
+        {
+            return kTRUE;
+        }
+        return kFALSE;
     }
 
     const string KSFile::fDirectoryMark = string( "/" );

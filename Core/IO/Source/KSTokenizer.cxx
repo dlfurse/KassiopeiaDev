@@ -2,15 +2,17 @@
 
 #include "KSTextFile.h"
 
-//#include <iostream>
-//using std::endl;
-//using std::cout;
+#include <iostream>
+using std::endl;
+using std::cout;
 
 namespace Kassiopeia
 {
 
-    KSTokenizer::KSTokenizer( void(KSTokenizer::*anInitialState)(), void(KSTokenizer::*aFinalState)() ) :
+    KSTokenizer::KSTokenizer() :
         KSProcessor(),
+
+        fOldTokenizer( fTokenizer ),
 
         fFile( NULL ),
         fPath( "" ),
@@ -19,9 +21,9 @@ namespace Kassiopeia
         fColumn( 0 ),
         fChar( '\0' ),
 
-        fState( anInitialState ),
-        fInitialState( anInitialState ),
-        fFinalState( aFinalState ),
+        fState(),
+        fInitialState( &KSTokenizer::ParseBegin ),
+        fFinalState( &KSTokenizer::ParseComplete ),
         fElementNames(),
 
         fNameBuffer( "" ),
@@ -39,6 +41,40 @@ namespace Kassiopeia
     {
         fTokenizer = this;
     }
+    KSTokenizer::KSTokenizer( KSTokenizer* anActiveTokenizer ) :
+        KSProcessor(),
+
+        fOldTokenizer( anActiveTokenizer ),
+
+        fFile( NULL ),
+        fPath( "" ),
+        fName( "" ),
+        fLine( 0 ),
+        fColumn( 0 ),
+        fChar( '\0' ),
+
+        fState(),
+        fInitialState( &KSTokenizer::ParseBeginFile ),
+        fFinalState( &KSTokenizer::ParseCompleteFile ),
+        fElementNames(),
+
+        fNameBuffer( "" ),
+        fValueBuffer( "" ),
+        fErrorBuffer( "" ),
+        fBeginParsing( new KSTokenBeginParsing() ),
+        fEndParsing( new KSTokenEndParsing() ),
+        fBeginFile( new KSTokenBeginFile() ),
+        fEndFile( new KSTokenEndFile() ),
+        fBeginElement( new KSTokenBeginElement() ),
+        fEndElement( new KSTokenEndElement() ),
+        fAttribute( new KSTokenAttribute() ),
+        fData( new KSTokenData() ),
+        fError( new KSTokenError() )
+    {
+        DropProcessor( fOldTokenizer );
+
+        fTokenizer = this;
+    }
 
     KSTokenizer::~KSTokenizer()
     {
@@ -51,42 +87,52 @@ namespace Kassiopeia
         delete fAttribute;
         delete fData;
         delete fError;
-    }
 
-    const string& KSTokenizer::GetTypeName() const
-    {
-        return fTypeName;
+        fTokenizer = fOldTokenizer;
+        fOldTokenizer = NULL;
     }
-    const string KSTokenizer::fTypeName = string( "Tokenizer" );
 
     void KSTokenizer::ProcessFile( KSTextFile* aFile )
     {
-        if( fState == fInitialState )
+        fFile = aFile;
+        fState = fInitialState;
+        while( kTRUE )
         {
-            fFile = aFile;
-            while( kTRUE )
+            if( fState == fFinalState )
             {
-                if( fState == fFinalState )
-                {
-                    ((this)->*(fState))();
-                    break;
-                }
                 ((this)->*(fState))();
+                break;
             }
-            return;
+            ((this)->*(fState))();
         }
-        else
-        {
-            KSTokenizer* aNewTokenizer = new KSTokenizer( &KSTokenizer::ParseBeginFile, &KSTokenizer::ParseCompleteFile );
-            fTokenizer = aNewTokenizer;
+        return;
+    }
+    void KSTokenizer::IncludeFile( KSTextFile* aFile )
+    {
+        KSTokenizer* aNewTokenizer = new KSTokenizer( this );
 
-            aNewTokenizer->ProcessFile( aFile );
+        aNewTokenizer->ProcessFile( aFile );
 
-            delete aNewTokenizer;
-            fTokenizer = this;
+        delete aNewTokenizer;
 
-            return;
-        }
+        return;
+    }
+
+    const string& KSTokenizer::GetFilePath()
+    {
+        return fPath;
+    }
+    const string& KSTokenizer::GetFileName()
+    {
+        return fName;
+    }
+    const Int_t& KSTokenizer::GetFileLine()
+    {
+        return fLine;
+    }
+    const Int_t& KSTokenizer::GetFileColumn()
+    {
+        return fColumn;
     }
 
     void KSTokenizer::ParseBegin()
@@ -168,7 +214,7 @@ namespace Kassiopeia
         //if at end of file, then ParseComplete
         if( AtEnd() )
         {
-            fState = &KSTokenizer::ParseComplete;
+            fState = &KSTokenizer::ParseCompleteFile;
             return;
         }
 
@@ -222,7 +268,7 @@ namespace Kassiopeia
 
             if( AtOneOf( fRightAngle ) )
             {
-                //std::cout << "end element (3): " << fNameBuffer << std::endl;
+                //cout << "end element (3): " << fNameBuffer << std::endl;
                 fBeginElement->SetElementName( fNameBuffer );
                 ProcessToken( fBeginElement );
 
@@ -243,7 +289,7 @@ namespace Kassiopeia
         //if at ">", the put name on stack, then send start element, then ParseBody
         if( AtOneOf( fRightAngle ) )
         {
-            //std::cout << "start element (1): " << fNameBuffer << std::endl;
+            //cout << "start element (1): " << fNameBuffer << std::endl;
             fElementNames.push( fNameBuffer );
 
             fBeginElement->SetElementName( fNameBuffer );
@@ -259,7 +305,7 @@ namespace Kassiopeia
         //if at whitespace, then put name on stack, then send start element, then ParseStartElementPost
         if( AtOneOf( fWhiteSpaceChars ) )
         {
-            //std::cout << "start element (2): " << fNameBuffer << std::endl;
+            //cout << "start element (2): " << fNameBuffer << std::endl;
             fElementNames.push( fNameBuffer );
 
             fBeginElement->SetElementName( fNameBuffer );
@@ -295,7 +341,8 @@ namespace Kassiopeia
             {
                 fNameBuffer.assign( fElementNames.top() );
                 fElementNames.pop();
-                //std::cout << "end element (4): " << fNameBuffer << std::endl;
+
+                //cout << "end element (4): " << fNameBuffer << std::endl;
 
                 fEndElement->SetElementName( fNameBuffer );
                 ProcessToken( fEndElement );
@@ -486,7 +533,7 @@ namespace Kassiopeia
         //if at ">", then check and send end element, then prepare value, then ParseBody
         if( AtOneOf( fRightAngle ) )
         {
-            //std::cout << "end element (1): " << fNameBuffer << std::endl;
+            //std:://cout << "end element (1): " << fNameBuffer << std::endl;
             if( fElementNames.top() != fNameBuffer )
             {
                 fErrorBuffer.clear();
@@ -510,7 +557,7 @@ namespace Kassiopeia
         //if at whitespace, then check and send element, then ParseEndElementPost
         if( AtOneOf( fWhiteSpaceChars ) )
         {
-            //std::cout << "end element (2): " << fNameBuffer << std::endl;
+            //std:://cout << "end element (2): " << fNameBuffer << std::endl;
             if( fElementNames.top() != fNameBuffer )
             {
                 fErrorBuffer.clear();
@@ -607,8 +654,8 @@ namespace Kassiopeia
             return;
         }
 
-        fBeginFile->SetFilename( fName );
-        ProcessToken( fBeginFile );
+        fEndFile->SetFilename( fName );
+        ProcessToken( fEndFile );
 
         fPath = string( "" );
         fName = string( "" );

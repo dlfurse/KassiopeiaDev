@@ -79,7 +79,7 @@ log_dir='.'
 output_dir='.'
 
 #define compiler and linker flags for automake
-AM_CPPFLAGS="$DEFS $DEBUG_FLAGS $ROOT_CPPFLAGS $BOOST_CPPFLAGS -DOPTIONHOME=${sysconfdir} -DDATAHOME=${prefix}/Data" 
+AM_CPPFLAGS="$DEFS -g $DEBUG_FLAGS $ROOT_CPPFLAGS $BOOST_CPPFLAGS -DOPTIONHOME=${sysconfdir} -DDATAHOME=${prefix}/Data" 
 AM_CXXFLAGS="-W -Wall $ROOT_CXXFLAGS"
 AM_LDFLAGS="-fPIC $ROOT_LDFLAGS"
 

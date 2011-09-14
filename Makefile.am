@@ -6,8 +6,8 @@ SUBDIRS = \
     Core/Simulation/Build\
     Core/Geometry/Build\
     Core/Build\
-    TransportModules/Build
-    #Applications/Validation/Build
+    TransportModules/Build\
+    Applications/Validation/Build
 
 
 EXTRA_DIST = autogen.sh  README  Doc

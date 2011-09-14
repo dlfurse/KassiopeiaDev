@@ -1,42 +1,42 @@
-#include "KSMessage.h"
-#include <iostream>
-using std::cout;
-using std::endl;
+#include "KSIOMessage.h"
+#include "KSIOToolbox.h"
+
+#include "KSTextFile.h"
 
 using namespace Kassiopeia;
 
-class General;
-static KSMessageSystem< General > msg;
-
-class Green;
-template<> string KSMessageSystem< Green >::fPrefix = string("\33[32;1m\t");
-template<> string KSMessageSystem< Green >::fSuffix = string("\33[0m\t");
-static KSMessageSystem< Green > greenmsg;
-
 int main()
 {
-    KSMessageHandler* tMessageHandler = KSMessageHandler::GetInstance();
 
-    tMessageHandler->SetTerminalVerbosity( 2 );
+    iomsg + eWarning;
+    iomsg < "TestMessage::main" < end;
+    iomsg << "now testing color output" << ret;
+    iomsg << "here is another line of text" << end;
 
-    greenmsg = eWarning;
-    greenmsg < "TestMessage::main";
-    greenmsg << "now testing color output" << ret;
-    greenmsg << "here is another line of text" << end;
+    iomsg + eWarning;
+    iomsg < "TestMessage::main" < end;
+    iomsg << "hello" << end;
 
-    cout << "\33[0m";
+    iomsg + eError;
+    iomsg < "TestMessage::main" < end;
+    iomsg << "i ran into some kind of trouble" << end;
 
-    msg = eWarning;
-    msg < "TestMessage::main";
-    msg << "hello" << end;
+    iomsg + eNormal;
+    iomsg < "TestMessage::main" < end;
+    iomsg << "this thing!" << end;
 
-    msg = eError;
-    msg < "TestMessage::main";
-    msg << "goodbye" << end;
+    KSIOToolbox* tIOTB = KSIOToolbox::GetInstance();
 
-    msg = eMessage;
-    msg < "TestMessage::main";
-    msg << "shouldn\'t get here, as last message was a fatal error!" << end;
+    tIOTB->SetTerminalVerbosity( 10 );
+    tIOTB->SetLogVerbosity( 10 );
+    tIOTB->GetLogTextFile()->AddToPaths(".");
+    tIOTB->GetLogTextFile()->Open( KSFile::eWrite );
+
+    iomsg + 6;
+    iomsg < "TestMessage::main" < end;
+    iomsg << "this is a bizarro message" << end;
+
+    tIOTB->GetLogTextFile()->Close();
 
     return 0;
 }

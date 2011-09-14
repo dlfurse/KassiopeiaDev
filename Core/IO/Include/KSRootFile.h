@@ -16,10 +16,11 @@ namespace Kassiopeia
             virtual ~KSRootFile();
 
         public:
-            virtual Bool_t Open( Mode aMode );
-            virtual Bool_t Close();
-
             TFile* File();
+
+        protected:
+            virtual Bool_t OpenFileSubclass( Mode aMode );
+            virtual Bool_t CloseFileSubclass();
 
         private:
             TFile* fFile;

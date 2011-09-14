@@ -5,7 +5,8 @@
 namespace Kassiopeia
 {
 
-    KSManager::KSManager() :
+    KSManager::KSManager( const string& aKey ) :
+        fKey( aKey ),
         fState( eInstantiated )
     {
         KSManagerInstanceTable::GetInstance()->Register( this );

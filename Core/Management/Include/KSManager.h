@@ -16,15 +16,21 @@ namespace Kassiopeia
     {
 
         public:
-            KSManager();
+            KSManager( const string& aKey );
             virtual ~KSManager();
+
+        private:
+            KSManager();
 
             //**************
             //identification
             //**************
 
         public:
-            virtual const string& GetTypeName() const = 0;
+            const string& GetKey();
+
+        protected:
+            string fKey;
 
             //*****
             //state
@@ -52,9 +58,9 @@ namespace Kassiopeia
             void Shutdown();
             void Abort();
 
-            //******************
-            //dependency control
-            //******************
+            //**********
+            //dependency
+            //**********
 
         protected:
             void SetupManagerDependencies();
@@ -71,9 +77,9 @@ namespace Kassiopeia
             typedef DependencyMap::const_iterator DependencyCIt;
             DependencyMap fMap;
 
-            //****************
-            //subclass control
-            //****************
+            //**********
+            //management
+            //**********
 
         protected:
             virtual void SetupManagerSubclass() = 0;
@@ -81,6 +87,11 @@ namespace Kassiopeia
             virtual void ShutdownManagerSubclass() = 0;
             virtual void AbortManagerSubclass() = 0;
     };
+
+    inline const string& KSManager::GetKey()
+    {
+        return fKey;
+    }
 
     inline Bool_t KSManager::IsSetup() const
     {

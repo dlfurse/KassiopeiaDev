@@ -3,7 +3,7 @@
 #include "KSMagneticField.h"
 #include "KSElectricField.h"
 
-#include "KSMessage.h"
+//#include "KSMessage.h"
 
 namespace Kassiopeia
 {

@@ -18,10 +18,11 @@ namespace Kassiopeia
             virtual ~KSTextFile();
 
         public:
-            virtual Bool_t Open( Mode aMode );
-            virtual Bool_t Close();
-
             fstream* File();
+
+        protected:
+            virtual Bool_t OpenFileSubclass( Mode aMode );
+            virtual Bool_t CloseFileSubclass();
 
         private:
             fstream* fFile;

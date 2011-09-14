@@ -44,16 +44,16 @@ namespace Kassiopeia
 
     void KSManagerInstanceTable::Register( KSManager* aManager )
     {
-        FactoryIt It = fMap.find( aManager->GetTypeName() );
-        if( It != fMap.end() )
+        FactoryIt It = fMap.find( aManager->GetKey() );
+        if( It == fMap.end() )
         {
-            fMap.insert( FactoryEntry( aManager->GetTypeName(), aManager ) );
+            fMap.insert( FactoryEntry( aManager->GetKey(), aManager ) );
         }
         return;
     }
     void KSManagerInstanceTable::Unregister( KSManager* aManager )
     {
-        FactoryIt It = fMap.find( aManager->GetTypeName() );
+        FactoryIt It = fMap.find( aManager->GetKey() );
         if( It != fMap.end() )
         {
             fMap.erase( It );

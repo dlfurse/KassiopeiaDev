@@ -1,5 +1,7 @@
 #include "KSTextFile.h"
 
+#include "KSIOMessage.h"
+
 namespace Kassiopeia
 {
 
@@ -11,8 +13,46 @@ namespace Kassiopeia
     {
     }
 
-    Bool_t KSTextFile::Open( Mode aMode )
+    Bool_t KSTextFile::OpenFileSubclass( Mode aMode )
     {
+        vector< string >::iterator NameIt;
+        for( NameIt = fNames.begin(); NameIt != fNames.end(); NameIt++ )
+        {
+            if( aMode == eRead )
+            {
+                fFile = new fstream( (*NameIt).c_str(), ios_base::in );
+            }
+            if( aMode == eWrite )
+            {
+                fFile = new fstream( (*NameIt).c_str(), ios_base::out );
+            }
+            if( aMode == eAppend )
+            {
+                fFile = new fstream( (*NameIt).c_str(), ios_base::app );
+            }
+
+            iomsg + eDebug;
+            iomsg < "KSTextFile::Open";
+            iomsg << "key <" << fKey << "> attempting at <" << *NameIt << ">" << end;
+
+            if( fFile->fail() == kTRUE )
+            {
+                delete fFile;
+                fFile = NULL;
+                continue;
+            }
+
+            fResolvedPath = (*NameIt).substr(0,(*NameIt).find_last_of( fDirectoryMark ));
+            fResolvedBase = (*NameIt).substr((*NameIt).find_last_of( fDirectoryMark ) + 1);
+            fResolvedName = *NameIt;
+
+            iomsg + eNormal;
+            iomsg < "KSTextFile::Open";
+            iomsg << "key <" << fKey << "> successfully associated with file <" << fResolvedName << ">" << end;
+
+            return kTRUE;
+        }
+
         vector< string >::iterator BaseIt;
         vector< string >::iterator PathIt;
         for( BaseIt = fBases.begin(); BaseIt != fBases.end(); BaseIt++ )
@@ -32,6 +72,10 @@ namespace Kassiopeia
                     fFile = new fstream( (*PathIt + fDirectoryMark + *BaseIt).c_str(), ios_base::app );
                 }
 
+                iomsg + eDebug;
+                iomsg < "KSTextFile::Open";
+                iomsg << "key <" << fKey << "> attempting at <" << *PathIt << fDirectoryMark << *BaseIt << ">" << end;
+
                 if( fFile->fail() == kTRUE )
                 {
                     delete fFile;
@@ -43,20 +87,22 @@ namespace Kassiopeia
                 fResolvedBase = *BaseIt;
                 fResolvedName = *PathIt + fDirectoryMark + *BaseIt;
 
-                //iomsg = eMessage;
-                //iomsg < "KSTextFile::Open";
-                //iomsg << "key <" << fKey << "> successfully associated with file <" << fResolvedPath << fDirectoryMark << fResolvedName << ">" << end;
+                iomsg + eNormal;
+                iomsg < "KSTextFile::Open";
+                iomsg << "key <" << fKey << "> successfully associated with file <" << fResolvedName << ">" << end;
+
                 return kTRUE;
 
             }
         }
 
-        //iomsg = eWarning;
-        //iomsg < "KSTextFile::Open";
-        //iomsg << "key <" << fKey << "> could not be associated with any file" << end;
+        iomsg + eWarning;
+        iomsg < "KSTextFile::Open";
+        iomsg << "key <" << fKey << "> could not be associated with any file" << end;
+
         return kFALSE;
     }
-    Bool_t KSTextFile::Close()
+    Bool_t KSTextFile::CloseFileSubclass()
     {
         if( fFile != NULL )
         {

@@ -15,23 +15,19 @@ namespace Kassiopeia
         public KSProcessor
     {
         public:
-            KSTokenizer( void (KSTokenizer::*anInitialState)() = &KSTokenizer::ParseBegin, void (KSTokenizer::*aFinalState)() = &KSTokenizer::ParseComplete );
+            KSTokenizer();
+            KSTokenizer( KSTokenizer* anActiveTokenizer );
             virtual ~KSTokenizer();
-
-            //**************
-            //identification
-            //**************
-
-            virtual const string& GetTypeName() const;
         private:
-            static const string fTypeName;
+            KSTokenizer* fOldTokenizer;
 
             //**********
             //processing
             //**********
 
         public:
-            virtual void ProcessFile( KSTextFile* aFile );
+            void ProcessFile( KSTextFile* aFile );
+            void IncludeFile( KSTextFile* aFile );
 
             const string& GetFilePath();
             const string& GetFileName();

@@ -37,7 +37,7 @@ namespace Kassiopeia
 
             virtual const string& GetTypeName() const
             {
-                return XManagerType::GetStaticTypeName();
+                return XManagerType::fTypeName;
             }
     };
 
