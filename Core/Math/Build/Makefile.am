@@ -8,6 +8,7 @@ MATH_INCLUDES =  \
 	-I@top_srcdir@/Core/Messages/Include
 
 MATH_HEADERFILES =  \
+	../Include/KMath.h\
     ../Include/KMathODE.h\
     ../Include/KMathCompositeODE.h\
     ../Include/KMathODESolver.h\
