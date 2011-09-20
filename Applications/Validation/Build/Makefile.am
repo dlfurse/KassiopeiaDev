@@ -56,6 +56,12 @@ TestTokenizer_CPPFLAGS = $(VALIDATION_COMPILER_FLAGS)
 TestTokenizer_LDADD = $(VALIDATION_LIBS)
 TestTokenizer_LDFLAGS = $(VALIDATION_LINKER_FLAGS)
 
+bin_PROGRAMS += TestVariableReplacement
+TestVariableReplacement_SOURCES = ../Source/TestVariableReplacement.cxx
+TestVariableReplacement_CPPFLAGS = $(VALIDATION_COMPILER_FLAGS)
+TestVariableReplacement_LDADD = $(VALIDATION_LIBS)
+TestVariableReplacement_LDFLAGS = $(VALIDATION_LINKER_FLAGS)
+
 bin_PROGRAMS += TestODE
 TestODE_SOURCES = ../Source/TestODE.cxx
 TestODE_CPPFLAGS = $(VALIDATION_COMPILER_FLAGS)

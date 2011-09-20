@@ -3,6 +3,7 @@
 #include "KSTokenizer.h"
 #include "KSProcessor.h"
 #include "KSIncludeProcessor.h"
+#include "KSVariableProcessor.h"
 
 #include <iostream>
 using std::cout;
@@ -22,48 +23,48 @@ namespace Kassiopeia
             }
 
         public:
-            virtual void ProcessToken( const KSTokenBeginParsing* /*token*/)
+            virtual void ProcessToken( KSTokenBeginParsing* /*token*/)
             {
                 cout << "got a begin parsing token." << endl;
                 return;
             }
-            virtual void ProcessToken( const KSTokenEndParsing* /*token*/)
+            virtual void ProcessToken( KSTokenEndParsing* /*token*/)
             {
                 cout << "got an end parsing token." << endl;
                 return;
             }
-            virtual void ProcessToken( const KSTokenBeginFile* token )
+            virtual void ProcessToken( KSTokenBeginFile* token )
             {
                 cout << "got a begin file token [file name = " << token->GetFilename() << "]" << endl;
                 return;
             }
-            virtual void ProcessToken( const KSTokenEndFile* token )
+            virtual void ProcessToken( KSTokenEndFile* token )
             {
                 cout << "got an end file token [file name = " << token->GetFilename() << "]" << endl;
                 return;
             }
-            virtual void ProcessToken( const KSTokenBeginElement* token )
+            virtual void ProcessToken( KSTokenBeginElement* token )
             {
                 cout << "got a start element token [element name = " << token->GetElementName() << "]" << endl;
                 return;
             }
-            virtual void ProcessToken( const KSTokenEndElement* token )
+            virtual void ProcessToken( KSTokenEndElement* token )
             {
                 cout << "got an end element token [element name = " << token->GetElementName() << "]" << endl;
                 return;
             }
-            virtual void ProcessToken( const KSTokenAttribute* token )
+            virtual void ProcessToken( KSTokenAttribute* token )
             {
                 cout << "got an attribute token [attribute name = " << token->GetAttributeName() << ", attribute value = " << token->GetAttributeValue() << "]" << endl;
                 return;
             }
-            virtual void ProcessToken( const KSTokenData* token )
+            virtual void ProcessToken( KSTokenData* token )
             {
                 cout << "got an area of data:" << endl;
                 cout << "  " << token->GetDataValue() << endl;
                 return;
             }
-            virtual void ProcessToken( const KSTokenError* token )
+            virtual void ProcessToken( KSTokenError* token )
             {
                 cout << "got an error token! [error = " << token->GetMessage() << "]" << endl;
                 return;
@@ -78,37 +79,50 @@ int main( int argc, char** argv )
     string FileName;
     string IncludedFileName;
 
-    if( argc < 3 )
+    if( argc < 2 )
     {
-        cout << "i can display the contents of xml files that include each other." << endl;
-        cout << "give me an two xml file names please, one that uses the <include> tag to include the other!" << endl;
+        cout << "i can display the processed contents of xml files." << endl;
+        cout << "give me an xml file name please!" << endl;
         return -1;
     }
     else
     {
         FileName = string( argv[1] );
-        IncludedFileName = string( argv[2] );
+        //IncludedFileName = string( argv[2] );
     }
 
-    KSIOToolbox::GetInstance()->SetTerminalVerbosity(10);
+    KSIOToolbox::GetInstance()->SetTerminalVerbosity( 10 );
+    KSIOToolbox::GetInstance()->SetLogVerbosity( 10 );
+
+    cout << "trying to open the log file..." << endl;
+
+    KSIOToolbox::GetInstance()->GetLogTextFile()->Open( KSTextFile::eWrite );
+
+    cout << "...done trying to open the log file" << endl;
 
     KSTextFile File;
     File.SetKey( "InputFile" );
     File.AddToNames( FileName );
     KSIOToolbox::GetInstance()->AddConfigTextFile( &File );
 
-    KSTextFile IncludedFile;
-    IncludedFile.SetKey( "FirstInclude" );
-    IncludedFile.AddToNames( IncludedFileName );
-    KSIOToolbox::GetInstance()->AddConfigTextFile( &IncludedFile );
+    //KSTextFile IncludedFile;
+    //IncludedFile.SetKey( "FirstInclude" );
+    //IncludedFile.AddToNames( IncludedFileName );
+    //KSIOToolbox::GetInstance()->AddConfigTextFile( &IncludedFile );
 
     KSTokenizer Tokenizer;
     KSIncludeProcessor IncludeProcessor;
-    KSTestProcessor Processor;
-
     Tokenizer.DropProcessor( &IncludeProcessor );
-    Tokenizer.DropProcessor( &Processor );
+    KSVariableProcessor VariableProcessor;
+    Tokenizer.DropProcessor( &VariableProcessor );
+    KSTestProcessor TestProcessor;
+    Tokenizer.DropProcessor( &TestProcessor );
+
+    cout << "parsing file..." << endl;
+
     Tokenizer.ProcessFile( &File );
+
+    cout << "...done parsing file" << endl;
 
     return 0;
 }

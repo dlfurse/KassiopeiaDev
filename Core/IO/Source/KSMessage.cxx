@@ -22,7 +22,7 @@ namespace Kassiopeia
     const KSMessageSeverity eNormal = 2;
     const KSMessageSeverity eDebug = 3;
     const KSMessageNewline ret = KSMessageNewline();
-    const KSMessageEnd end = KSMessageEnd();
+    const KSMessageEnd eom = KSMessageEnd();
 
     KSMessage::KSMessage( const string& aKey ) :
         fKey( aKey ),
@@ -60,11 +60,11 @@ namespace Kassiopeia
         fDescriptionBuffer(),
         fDescription( "" ),
 
-        fOriginBuffer(),
-        fOrigin( "" ),
+        fOriginLine(),
+        fOriginLines(),
 
-        fLineBuffer(),
-        fLines(),
+        fMessageLine(),
+        fMessageLines(),
 
         fTerminalVerbosity( eNormal ),
         fLogVerbosity( eNormal ),
@@ -127,36 +127,56 @@ namespace Kassiopeia
         return *this;
     }
 
+    KSMessage& KSMessage::operator<( const KSMessageNewline& )
+    {
+        fOriginLines.push_back( fOriginLine.str() );
+
+        fOriginLine.clear();
+        fOriginLine.str( "" );
+
+        return *this;
+    }
     KSMessage& KSMessage::operator<( const KSMessageEnd& )
     {
-        fOrigin = string( "ORIGIN: " ) + fOriginBuffer.str();
-
-        fOriginBuffer.clear();
-        fOriginBuffer.str( "" );
+        Print();
         return *this;
     }
 
     KSMessage& KSMessage::operator<<( const KSMessageNewline& )
     {
-        fLines.push_back( fLineBuffer.str() );
+        fMessageLines.push_back( fMessageLine.str() );
 
-        fLineBuffer.clear();
-        fLineBuffer.str( "" );
+        fMessageLine.clear();
+        fMessageLine.str( "" );
         return *this;
     }
     KSMessage& KSMessage::operator<<( const KSMessageEnd& )
     {
-        fLines.push_back( fLineBuffer.str() );
+        Print();
+        return *this;
+    }
+    void KSMessage::Print()
+    {
+        fOriginLines.push_back( fOriginLine.str() );
+        fMessageLines.push_back( fMessageLine.str() );
 
         if( fSeverity <= fTerminalVerbosity )
         {
             cout << fPrefix << fTopSeparator << fSuffix << '\n';
             cout << fPrefix << fDescription << fSuffix << '\n';
-            cout << fPrefix << fOrigin << fSuffix << '\n';
-            for( vector< string >::iterator It = fLines.begin(); It != fLines.end(); It++ )
+
+            cout << fPrefix << "ORIGIN:" << fSuffix << '\n';
+            for( vector< string >::iterator It = fOriginLines.begin(); It != fOriginLines.end(); It++ )
             {
-                cout << fPrefix << *It << fSuffix << '\n';
+                cout << fPrefix << "  " << *It << fSuffix << '\n';
             }
+
+            cout << fPrefix << "MESSAGE:" << fSuffix << '\n';
+            for( vector< string >::iterator It = fMessageLines.begin(); It != fMessageLines.end(); It++ )
+            {
+                cout << fPrefix << "  " << *It << fSuffix << '\n';
+            }
+
             cout << fPrefix << fBottomSeparator << fSuffix << '\n';
         }
 
@@ -164,22 +184,36 @@ namespace Kassiopeia
         {
             *(fLogFile->File()) << fSystemPrefix << fTopSeparator << fSystemSuffix << '\n';
             *(fLogFile->File()) << fSystemPrefix << fDescription << fSystemSuffix << '\n';
-            *(fLogFile->File()) << fSystemPrefix << fOrigin << fSystemSuffix << '\n';
-            for( vector< string >::iterator It = fLines.begin(); It != fLines.end(); It++ )
+
+            *(fLogFile->File()) << fSystemPrefix << "ORIGIN:" << fSystemSuffix << '\n';
+            for( vector< string >::iterator It = fOriginLines.begin(); It != fOriginLines.end(); It++ )
             {
-                *(fLogFile->File()) << fSystemPrefix << *It << fSystemSuffix << '\n';
+                *(fLogFile->File()) << fSystemPrefix << "  " << *It << fSystemSuffix << '\n';
+            }
+
+            *(fLogFile->File()) << fSystemPrefix << "MESSAGE:" << fSystemSuffix << '\n';
+            for( vector< string >::iterator It = fMessageLines.begin(); It != fMessageLines.end(); It++ )
+            {
+                *(fLogFile->File()) << fSystemPrefix << "  " << *It << fSystemSuffix << '\n';
             }
             *(fLogFile->File()) << fSystemPrefix << fBottomSeparator << fSystemSuffix << '\n';
         }
 
-        while( !fLines.empty() )
+        while( !fOriginLines.empty() )
         {
-            fLines.pop_back();
+            fOriginLines.pop_back();
         }
+        fOriginLine.clear();
+        fOriginLine.str( "" );
 
-        fLineBuffer.clear();
-        fLineBuffer.str( "" );
-        return *this;
+        while( !fMessageLines.empty() )
+        {
+            fMessageLines.pop_back();
+        }
+        fMessageLine.clear();
+        fMessageLine.str( "" );
+
+        return;
     }
 
     void KSMessage::SetTerminalVerbosity( KSMessageSeverity aVerbosity )

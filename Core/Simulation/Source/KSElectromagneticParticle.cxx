@@ -112,7 +112,7 @@ namespace Kassiopeia
         msg << "  z:          " << fPosition.Z() << ret;
         msg << "  px:         " << fMomentum.X() << ret;
         msg << "  py:         " << fMomentum.Y() << ret;
-        msg << "  pz:         " << fMomentum.Z() << end;
+        msg << "  pz:         " << fMomentum.Z() << eom;
         return;
     }
 }

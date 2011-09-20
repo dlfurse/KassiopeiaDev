@@ -44,7 +44,7 @@ namespace Kassiopeia
 
             iomsg + eNormal;
             iomsg < "KSTextFile::Open";
-            iomsg << "key <" << fKey << "> successfully associated with file <" << fResolvedName << ">" << end;
+            iomsg << "key <" << fKey << "> successfully associated with file <" << fResolvedName << ">" << eom;
 
             return kTRUE;
         }
@@ -81,7 +81,7 @@ namespace Kassiopeia
 
                 iomsg + eNormal;
                 iomsg < "KSRootFile::Open";
-                iomsg << "key <" << fKey << "> successfully associated with file <" << fResolvedPath << fDirectoryMark << fResolvedName << ">" << end;
+                iomsg << "key <" << fKey << "> successfully associated with file <" << fResolvedPath << fDirectoryMark << fResolvedName << ">" << eom;
                 return kTRUE;
 
             }
@@ -89,7 +89,7 @@ namespace Kassiopeia
 
         iomsg + eWarning;
         iomsg < "KSRootFile::Open";
-        iomsg << "key <" << fKey << "> could not be associated with any file" << end;
+        iomsg << "key <" << fKey << "> could not be associated with any file" << eom;
         return kFALSE;
     }
     Bool_t KSRootFile::CloseFileSubclass()

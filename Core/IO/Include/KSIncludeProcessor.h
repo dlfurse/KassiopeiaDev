@@ -19,9 +19,9 @@ namespace Kassiopeia
             KSIncludeProcessor();
             virtual ~KSIncludeProcessor();
 
-            virtual void ProcessToken( const KSTokenBeginElement* aToken );
-            virtual void ProcessToken( const KSTokenEndElement* aToken );
-            virtual void ProcessToken( const KSTokenAttribute* aToken );
+            virtual void ProcessToken( KSTokenBeginElement* aToken );
+            virtual void ProcessToken( KSTokenEndElement* aToken );
+            virtual void ProcessToken( KSTokenAttribute* aToken );
 
         private:
             void Reset();

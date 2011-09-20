@@ -33,7 +33,7 @@ namespace Kassiopeia
 
             iomsg + eDebug;
             iomsg < "KSTextFile::Open";
-            iomsg << "key <" << fKey << "> attempting at <" << *NameIt << ">" << end;
+            iomsg << "key <" << fKey << "> attempting at <" << *NameIt << ">" << eom;
 
             if( fFile->fail() == kTRUE )
             {
@@ -48,7 +48,7 @@ namespace Kassiopeia
 
             iomsg + eNormal;
             iomsg < "KSTextFile::Open";
-            iomsg << "key <" << fKey << "> successfully associated with file <" << fResolvedName << ">" << end;
+            iomsg << "key <" << fKey << "> successfully associated with file <" << fResolvedName << ">" << eom;
 
             return kTRUE;
         }
@@ -74,7 +74,7 @@ namespace Kassiopeia
 
                 iomsg + eDebug;
                 iomsg < "KSTextFile::Open";
-                iomsg << "key <" << fKey << "> attempting at <" << *PathIt << fDirectoryMark << *BaseIt << ">" << end;
+                iomsg << "key <" << fKey << "> attempting at <" << *PathIt << fDirectoryMark << *BaseIt << ">" << eom;
 
                 if( fFile->fail() == kTRUE )
                 {
@@ -89,7 +89,7 @@ namespace Kassiopeia
 
                 iomsg + eNormal;
                 iomsg < "KSTextFile::Open";
-                iomsg << "key <" << fKey << "> successfully associated with file <" << fResolvedName << ">" << end;
+                iomsg << "key <" << fKey << "> successfully associated with file <" << fResolvedName << ">" << eom;
 
                 return kTRUE;
 
@@ -98,7 +98,7 @@ namespace Kassiopeia
 
         iomsg + eWarning;
         iomsg < "KSTextFile::Open";
-        iomsg << "key <" << fKey << "> could not be associated with any file" << end;
+        iomsg << "key <" << fKey << "> could not be associated with any file" << eom;
 
         return kFALSE;
     }

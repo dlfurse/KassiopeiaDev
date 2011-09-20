@@ -9,21 +9,21 @@ int main()
 {
 
     iomsg + eWarning;
-    iomsg < "TestMessage::main" < end;
+    iomsg < "TestMessage::main";
     iomsg << "now testing color output" << ret;
-    iomsg << "here is another line of text" << end;
+    iomsg << "here is another line of text" << eom;
 
     iomsg + eWarning;
-    iomsg < "TestMessage::main" < end;
-    iomsg << "hello" << end;
+    iomsg < "TestMessage::main";
+    iomsg << "hello" << eom;
 
     iomsg + eError;
-    iomsg < "TestMessage::main" < end;
-    iomsg << "i ran into some kind of trouble" << end;
+    iomsg < "TestMessage::main";
+    iomsg << "i ran into some kind of trouble" << eom;
 
     iomsg + eNormal;
-    iomsg < "TestMessage::main" < end;
-    iomsg << "this thing!" << end;
+    iomsg < "TestMessage::main";
+    iomsg << "this thing!" << eom;
 
     KSIOToolbox* tIOTB = KSIOToolbox::GetInstance();
 
@@ -33,8 +33,8 @@ int main()
     tIOTB->GetLogTextFile()->Open( KSFile::eWrite );
 
     iomsg + 6;
-    iomsg < "TestMessage::main" < end;
-    iomsg << "this is a bizarro message" << end;
+    iomsg < "TestMessage::main";
+    iomsg << "this is a bizarro message" << eom;
 
     tIOTB->GetLogTextFile()->Close();
 

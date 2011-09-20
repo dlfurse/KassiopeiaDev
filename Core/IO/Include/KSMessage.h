@@ -34,7 +34,7 @@ namespace Kassiopeia
     extern const KSMessageSeverity eNormal;
     extern const KSMessageSeverity eDebug;
     extern const KSMessageNewline ret;
-    extern const KSMessageEnd end;
+    extern const KSMessageEnd eom;
 
     class KSMessage
     {
@@ -62,11 +62,12 @@ namespace Kassiopeia
         public:
             KSMessage& operator+( const KSMessageSeverity& aSeverity );
 
+            KSMessage& operator<( const KSMessageNewline& );
             KSMessage& operator<( const KSMessageEnd& );
             template< class XPrintable >
             KSMessage& operator<( const XPrintable& aFragment )
             {
-                fOriginBuffer << aFragment;
+                fOriginLine << aFragment;
                 return *this;
             }
 
@@ -75,9 +76,12 @@ namespace Kassiopeia
             template< class XPrintable >
             KSMessage& operator<<( const XPrintable& aFragment )
             {
-                fLineBuffer << aFragment;
+                fMessageLine << aFragment;
                 return *this;
             }
+
+        private:
+            void Print();
 
         protected:
             string fSystemDescription;
@@ -115,11 +119,11 @@ namespace Kassiopeia
             stringstream fDescriptionBuffer;
             string fDescription;
 
-            stringstream fOriginBuffer;
-            string fOrigin;
+            stringstream fOriginLine;
+            vector< string > fOriginLines;
 
-            stringstream fLineBuffer;
-            vector< string > fLines;
+            stringstream fMessageLine;
+            vector< string > fMessageLines;
 
             //********
             //settings

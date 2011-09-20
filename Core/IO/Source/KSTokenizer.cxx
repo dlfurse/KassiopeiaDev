@@ -791,8 +791,8 @@ namespace Kassiopeia
     const string KSTokenizer::fOperators = string( "+-*/" );
     const string KSTokenizer::fRightBraces = string( ")]" );
 
-    const string KSTokenizer::fParameterLeftBrace = string( "$" );
-    const string KSTokenizer::fParameterRightBrace = string( "$" );
+    const string KSTokenizer::fParameterLeftBrace = string( "{" );
+    const string KSTokenizer::fParameterRightBrace = string( "}" );
 
     const string KSTokenizer::fWhiteSpaceChars = KSTokenizer::fSpace + KSTokenizer::fTab + KSTokenizer::fNewLine + KSTokenizer::fCarriageReturn;
     const string KSTokenizer::fNameStartChars = KSTokenizer::fLowerCase + KSTokenizer::fUpperCase + string( ":_" );

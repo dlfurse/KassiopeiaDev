@@ -23,7 +23,6 @@ AC_INIT([Kassiopeia], [2.00.00], [https://savannah.fzk.de/projects/katrin/])
 #automake version check and initialization
 AM_INIT_AUTOMAKE([foreign 1.10 tar-ustar])
 AC_CONFIG_MACRO_DIR([AutoconfMacros])
-AC_CONFIG_HEADERS([KassiopeiaConfig.h])
 m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])], [AC_MSG_WARN([  "macro SILENT_RULES not found: upgrade autoconf to enjoy a less verbose build output!"])  ])
 
 #libtool version check and initialization
@@ -72,14 +71,14 @@ AS_IF(
 
 #set default prefix to build area
 AC_PREFIX_DEFAULT([`pwd`])
-config_dir='${prefix}/Config'
-data_dir='${prefix}/Data'
-scratch_dir='${prefix}/Data'
-log_dir='.'
-output_dir='.'
+
+#trick autotools into doing something sane and useful
+PREFIX=`test "$prefix" = NONE && prefix=$ac_default_prefix; eval echo "${prefix}"`
+AC_SUBST(PREFIX)
+
 
 #define compiler and linker flags for automake
-AM_CPPFLAGS="$DEFS -g $DEBUG_FLAGS $ROOT_CPPFLAGS $BOOST_CPPFLAGS -DOPTIONHOME=${sysconfdir} -DDATAHOME=${prefix}/Data" 
+AM_CPPFLAGS="$DEFS -g $DEBUG_FLAGS $ROOT_CPPFLAGS $BOOST_CPPFLAGS -DKASSIOPEIA_CONFIG_DEFAULT_DIR=${PREFIX}/Config -DKASSIOPEIA_DATA_DEFAULT_DIR=${PREFIX}/Data -DKASSIOPEIA_SCRATCH_DEFAULT_DIR=${PREFIX}/Data -DKASSIOPEIA_OUTPUT_DEFAULT_DIR=. -DKASSIOPEIA_LOG_DEFAULT_DIR=." 
 AM_CXXFLAGS="-W -Wall $ROOT_CXXFLAGS"
 AM_LDFLAGS="-fPIC $ROOT_LDFLAGS"
 

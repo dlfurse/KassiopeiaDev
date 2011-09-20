@@ -17,7 +17,7 @@ namespace Kassiopeia
     {
     }
 
-    void KSIncludeProcessor::ProcessToken( const KSTokenBeginElement* aToken )
+    void KSIncludeProcessor::ProcessToken( KSTokenBeginElement* aToken )
     {
         if( fState == eInactive )
         {
@@ -33,16 +33,16 @@ namespace Kassiopeia
         }
 
         iomsg + eWarning;
-        iomsg < "KSIncludeProcessor::ProcessToken" < end;
+        iomsg < "KSIncludeProcessor::ProcessToken";
         iomsg << "got unknown element <" << aToken->GetElementName() << ">" << ret;
-        iomsg << "in path <" << fTokenizer->GetFilePath() << "in file <" << fTokenizer->GetFileName() << "> at line <" << fTokenizer->GetFileLine() << ">, column <" << fTokenizer->GetFileColumn() << ">" << end;
+        iomsg << "in path <" << fTokenizer->GetFilePath() << "in file <" << fTokenizer->GetFileName() << "> at line <" << fTokenizer->GetFileLine() << ">, column <" << fTokenizer->GetFileColumn() << ">" << eom;
 
         Reset();
 
         return;
     }
 
-    void KSIncludeProcessor::ProcessToken( const KSTokenAttribute* aToken )
+    void KSIncludeProcessor::ProcessToken( KSTokenAttribute* aToken )
     {
 
         if( fState == eInactive )
@@ -94,9 +94,9 @@ namespace Kassiopeia
         }
 
         iomsg + eWarning;
-        iomsg < "KSIncludeProcessor::ProcessToken" < end;
+        iomsg < "KSIncludeProcessor::ProcessToken";
         iomsg << "got unknown attribute <" << aToken->GetAttributeName() << ">" << ret;
-        iomsg << "in path <" << fTokenizer->GetFilePath() << "in file <" << fTokenizer->GetFileName() << "> at line <" << fTokenizer->GetFileLine() << ">, column <" << fTokenizer->GetFileColumn() << ">" << end;
+        iomsg << "in path <" << fTokenizer->GetFilePath() << "in file <" << fTokenizer->GetFileName() << "> at line <" << fTokenizer->GetFileLine() << ">, column <" << fTokenizer->GetFileColumn() << ">" << eom;
 
         Reset();
 
@@ -104,7 +104,7 @@ namespace Kassiopeia
 
     }
 
-    void KSIncludeProcessor::ProcessToken( const KSTokenEndElement* aToken )
+    void KSIncludeProcessor::ProcessToken( KSTokenEndElement* aToken )
     {
         if( fState == eInactive )
         {
@@ -143,9 +143,9 @@ namespace Kassiopeia
             if( aFile == NULL )
             {
                 iomsg + eWarning;
-                iomsg < "KSIncludeProcessor::ProcessToken" < end;
+                iomsg < "KSIncludeProcessor::ProcessToken";
                 iomsg << "could not find file with key <" << fKey << "> without" << ret;
-                iomsg << "in path <" << fTokenizer->GetFilePath() << "in file <" << fTokenizer->GetFileName() << "> at line <" << fTokenizer->GetFileLine() << ">, column <" << fTokenizer->GetFileColumn() << ">" << end;
+                iomsg << "in path <" << fTokenizer->GetFilePath() << "in file <" << fTokenizer->GetFileName() << "> at line <" << fTokenizer->GetFileLine() << ">, column <" << fTokenizer->GetFileColumn() << ">" << eom;
 
                 Reset();
 
@@ -161,9 +161,9 @@ namespace Kassiopeia
         if( fState == eActive )
         {
             iomsg + eWarning;
-            iomsg < "KSIncludeProcessor::ProcessToken" < end;
+            iomsg < "KSIncludeProcessor::ProcessToken";
             iomsg << "got end element <" << aToken->GetElementName() << "> without attributes" << ret;
-            iomsg << "in path <" << fTokenizer->GetFilePath() << "in file <" << fTokenizer->GetFileName() << "> at line <" << fTokenizer->GetFileLine() << ">, column <" << fTokenizer->GetFileColumn() << ">" << end;
+            iomsg << "in path <" << fTokenizer->GetFilePath() << "in file <" << fTokenizer->GetFileName() << "> at line <" << fTokenizer->GetFileLine() << ">, column <" << fTokenizer->GetFileColumn() << ">" << eom;
 
             Reset();
 

@@ -1,11 +1,50 @@
 #include "KSIOToolbox.h"
 
-#include "KSInstallDirectories.h"
 #include "KSTextFile.h"
 #include "KSRootFile.h"
 #include "KSMessage.h"
 
 #include "KSIOMessage.h"
+
+#include "KSAssert.h"
+
+#define STRING(anArgument) #anArgument
+#define AS_STRING(anArgument) STRING(anArgument)
+
+#ifndef KASSIOPEIA_CONFIG_DEFAULT_DIR
+KSASSERT( false, KASSIOPEIA_CONFIG_DEFAULT_DIR_was_not_defined )
+#define KASSIOPEIA_CONFIG_DEFAULT_DIR_STRING "."
+#else
+#define KASSIOPEIA_CONFIG_DEFAULT_DIR_STRING AS_STRING( KASSIOPEIA_CONFIG_DEFAULT_DIR )
+#endif
+
+#ifndef KASSIOPEIA_DATA_DEFAULT_DIR
+KSASSERT( false, KASSIOPEIA_DATA_DEFAULT_DIR_was_not_defined )
+#define KASSIOPEIA_DATA_DEFAULT_DIR_STRING "."
+#else
+#define KASSIOPEIA_DATA_DEFAULT_DIR_STRING AS_STRING( KASSIOPEIA_DATA_DEFAULT_DIR )
+#endif
+
+#ifndef KASSIOPEIA_SCRATCH_DEFAULT_DIR
+KSASSERT( false, KASSIOPEIA_SCRATCH_DEFAULT_DIR_was_not_defined )
+#define KASSIOPEIA_SCRATCH_DEFAULT_DIR_STRING "."
+#else
+#define KASSIOPEIA_SCRATCH_DEFAULT_DIR_STRING AS_STRING( KASSIOPEIA_SCRATCH_DEFAULT_DIR )
+#endif
+
+#ifndef KASSIOPEIA_OUTPUT_DEFAULT_DIR
+KSASSERT( false, KASSIOPEIA_OUTPUT_DEFAULT_DIR_was_not_defined )
+#define KASSIOPEIA_OUTPUT_DEFAULT_DIR_STRING "."
+#else
+#define KASSIOPEIA_OUTPUT_DEFAULT_DIR_STRING AS_STRING( KASSIOPEIA_OUTPUT_DEFAULT_DIR )
+#endif
+
+#ifndef KASSIOPEIA_LOG_DEFAULT_DIR
+KSASSERT( false, KASSIOPEIA_LOG_DEFAULT_DIR_was_not_defined )
+#define KASSIOPEIA_LOG_DEFAULT_DIR_STRING "."
+#else
+#define KASSIOPEIA_LOG_DEFAULT_DIR_STRING AS_STRING(KASSIOPEIA_LOG_DEFAULT_DIR)
+#endif
 
 namespace Kassiopeia
 {
@@ -23,35 +62,35 @@ namespace Kassiopeia
         KSManager( "IO" ),
         fConfigTextFileMap(),
         fConfigUserDir( "" ),
-        fConfigDefaultDir( KASSIOPEIA_INSTALL_CONFIG_DIR ),
+        fConfigDefaultDir( KASSIOPEIA_CONFIG_DEFAULT_DIR_STRING ),
         fDataTextFileMap(),
         fDataRootFileMap(),
         fDataUserDir( "" ),
-        fDataDefaultDir( KASSIOPEIA_INSTALL_DATA_DIR ),
+        fDataDefaultDir( KASSIOPEIA_CONFIG_DEFAULT_DIR_STRING ),
         fScratchTextFileMap(),
         fScratchRootFileMap(),
         fScratchUserDir( "" ),
-        fScratchDefaultDir( KASSIOPEIA_INSTALL_SCRATCH_DIR ),
+        fScratchDefaultDir( KASSIOPEIA_SCRATCH_DEFAULT_DIR_STRING ),
         fOutputRootFile( new KSRootFile() ),
         fOutputUserBase( "" ),
         fOutputDefaultBase( "KassiopeiaOutput.root" ),
         fOutputUserDir( "" ),
-        fOutputDefaultDir( KASSIOPEIA_INSTALL_OUTPUT_DIR ),
+        fOutputDefaultDir( KASSIOPEIA_OUTPUT_DEFAULT_DIR_STRING ),
         fLogTextFile( new KSTextFile() ),
         fLogUserBase( "" ),
         fLogDefaultBase( "KassiopeiaLog.txt" ),
         fLogUserDir( "" ),
-        fLogDefaultDir( KASSIOPEIA_INSTALL_LOG_DIR ),
+        fLogDefaultDir( KASSIOPEIA_LOG_DEFAULT_DIR_STRING ),
         fMessageMap(),
         fTerminalVerbosity( eNormal ),
         fLogVerbosity( eNormal )
 
     {
-        fOutputRootFile->SetKey("Output");
+        fOutputRootFile->SetKey( "Output" );
         fOutputRootFile->AddToPaths( fOutputDefaultDir );
         fOutputRootFile->AddToBases( fOutputDefaultBase );
 
-        fLogTextFile->SetKey("Log");
+        fLogTextFile->SetKey( "Log" );
         fLogTextFile->AddToPaths( fLogDefaultDir );
         fLogTextFile->AddToBases( fLogDefaultBase );
     }
