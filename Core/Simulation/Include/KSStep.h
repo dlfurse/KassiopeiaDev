@@ -24,6 +24,8 @@ namespace Kassiopeia
             void SetFinalParticle( KSParticle* const aFinalParticle );
             KSParticle* GetFinalParticle() const;
 
+            Double_t GetPathLength(); //todo:calculation of pathlenght witch caching and stuff
+
         private:
             Int_t fTrackId;
             Int_t fStepId;

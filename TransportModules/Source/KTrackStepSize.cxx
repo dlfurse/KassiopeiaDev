@@ -9,7 +9,8 @@ namespace Kassiopeia
         KSStepSize(),
         fParent( NULL ),
         fInitialParticle( NULL ),
-        fFinalParticle( NULL )
+        fFinalParticle( NULL ),
+        fError( NULL)
     {
     }
 

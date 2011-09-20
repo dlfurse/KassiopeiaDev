@@ -1,5 +1,5 @@
-#ifndef KSBASICPARTICLE_H_
-#define KSBASICPARTICLE_H_
+#ifndef KSPARTICLE_H_
+#define KSPARTICLE_H_
 
 #include "KSConst.h"
 
