@@ -2,8 +2,9 @@
 #include "KSTextFile.h"
 #include "KSTokenizer.h"
 #include "KSProcessor.h"
-#include "KSIncludeProcessor.h"
 #include "KSVariableProcessor.h"
+#include "KSLoopProcessor.h"
+#include "KSIncludeProcessor.h"
 
 #include <iostream>
 using std::cout;
@@ -111,10 +112,12 @@ int main( int argc, char** argv )
     //KSIOToolbox::GetInstance()->AddConfigTextFile( &IncludedFile );
 
     KSTokenizer Tokenizer;
-    KSIncludeProcessor IncludeProcessor;
-    Tokenizer.DropProcessor( &IncludeProcessor );
     KSVariableProcessor VariableProcessor;
     Tokenizer.DropProcessor( &VariableProcessor );
+    KSLoopProcessor LoopProcessor;
+    Tokenizer.DropProcessor( &LoopProcessor );
+    KSIncludeProcessor IncludeProcessor;
+    Tokenizer.DropProcessor( &IncludeProcessor );
     KSTestProcessor TestProcessor;
     Tokenizer.DropProcessor( &TestProcessor );
 

@@ -25,6 +25,7 @@ namespace Kassiopeia
     {
         public:
             KSTokenError();
+            KSTokenError( const KSTokenError& aCopy );
             virtual ~KSTokenError();
 
             void SetMessage( const string& message );

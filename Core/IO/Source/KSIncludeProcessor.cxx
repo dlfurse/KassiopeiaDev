@@ -9,7 +9,8 @@
 namespace Kassiopeia
 {
 
-    KSIncludeProcessor::KSIncludeProcessor()
+    KSIncludeProcessor::KSIncludeProcessor() :
+        KSProcessor()
     {
         Reset();
     }
@@ -34,10 +35,8 @@ namespace Kassiopeia
 
         iomsg + eWarning;
         iomsg < "KSIncludeProcessor::ProcessToken";
-        iomsg << "got unknown element <" << aToken->GetElementName() << ">" << ret;
+        iomsg << "ignoring unknown element <" << aToken->GetElementName() << ">" << ret;
         iomsg << "in path <" << fTokenizer->GetFilePath() << "in file <" << fTokenizer->GetFileName() << "> at line <" << fTokenizer->GetFileLine() << ">, column <" << fTokenizer->GetFileColumn() << ">" << eom;
-
-        Reset();
 
         return;
     }
@@ -131,7 +130,9 @@ namespace Kassiopeia
 
             Reset();
 
-            fTokenizer->IncludeFile( aFile );
+            KSTokenizer* aNewTokenizer = new KSTokenizer( fTokenizer );
+            aNewTokenizer->ProcessFile( aFile );
+            delete aNewTokenizer;
 
             delete aFile;
 
@@ -154,7 +155,9 @@ namespace Kassiopeia
 
             Reset();
 
-            fTokenizer->IncludeFile( aFile );
+            KSTokenizer* aNewTokenizer = new KSTokenizer( fTokenizer );
+            aNewTokenizer->ProcessFile( aFile );
+            delete aNewTokenizer;
 
             return;
         }

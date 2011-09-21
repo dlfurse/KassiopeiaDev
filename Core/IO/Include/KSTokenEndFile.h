@@ -11,6 +11,7 @@ namespace Kassiopeia
     {
         public:
             KSTokenEndFile();
+            KSTokenEndFile( const KSTokenEndFile& aCopy );
             virtual ~KSTokenEndFile();
 
             void SetFilename( const string& message );

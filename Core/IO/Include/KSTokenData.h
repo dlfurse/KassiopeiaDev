@@ -29,6 +29,7 @@ namespace Kassiopeia
     {
         public:
             KSTokenData();
+            KSTokenData( const KSTokenData& aCopy );
             virtual ~KSTokenData();
 
             void SetDataValue( const string& value );
@@ -40,7 +41,6 @@ namespace Kassiopeia
             virtual const string& GetTypeName() const;
 
         private:
-            string fName;
             string fValue;
             static const string fTypeName;
     };

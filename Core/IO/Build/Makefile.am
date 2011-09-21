@@ -25,8 +25,9 @@ IO_HEADERFILES = \
 	../Include/KSTokenError.h\
 	../Include/KSProcessor.h\
 	../Include/KSTokenizer.h\
-	../Include/KSIncludeProcessor.h\
 	../Include/KSVariableProcessor.h\
+	../Include/KSLoopProcessor.h\
+	../Include/KSIncludeProcessor.h\
 	../Include/KSIOToolbox.h\
 	../Include/KSIOMessage.h
 
@@ -47,8 +48,9 @@ IO_SOURCEFILES = \
 	../Source/KSTokenError.cxx\
 	../Source/KSProcessor.cxx\
 	../Source/KSTokenizer.cxx\
-	../Source/KSIncludeProcessor.cxx\
 	../Source/KSVariableProcessor.cxx\
+	../Source/KSLoopProcessor.cxx\
+	../Source/KSIncludeProcessor.cxx\
 	../Source/KSIOToolbox.cxx\
 	../Source/KSIOMessage.cxx
     

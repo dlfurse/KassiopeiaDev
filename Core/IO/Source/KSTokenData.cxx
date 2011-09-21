@@ -5,8 +5,12 @@ namespace Kassiopeia
 
     KSTokenData::KSTokenData() :
         KSToken(),
-        fName( "" ),
         fValue( "" )
+    {
+    }
+    KSTokenData::KSTokenData( const KSTokenData& aCopy ) :
+        KSToken(),
+        fValue( aCopy.fValue )
     {
     }
     KSTokenData::~KSTokenData()

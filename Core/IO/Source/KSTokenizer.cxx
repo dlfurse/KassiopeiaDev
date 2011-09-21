@@ -14,6 +14,8 @@ namespace Kassiopeia
 
         fOldTokenizer( fTokenizer ),
 
+        fContextStack(),
+
         fFile( NULL ),
         fPath( "" ),
         fName( "" ),
@@ -24,7 +26,7 @@ namespace Kassiopeia
         fState(),
         fInitialState( &KSTokenizer::ParseBegin ),
         fFinalState( &KSTokenizer::ParseComplete ),
-        fElementNames(),
+        fElementStack(),
 
         fNameBuffer( "" ),
         fValueBuffer( "" ),
@@ -56,7 +58,7 @@ namespace Kassiopeia
         fState(),
         fInitialState( &KSTokenizer::ParseBeginFile ),
         fFinalState( &KSTokenizer::ParseCompleteFile ),
-        fElementNames(),
+        fElementStack(),
 
         fNameBuffer( "" ),
         fValueBuffer( "" ),
@@ -107,14 +109,17 @@ namespace Kassiopeia
         }
         return;
     }
-    void KSTokenizer::IncludeFile( KSTextFile* aFile )
+
+    void KSTokenizer::PushContext( KSProcessor* aProcessor )
     {
-        KSTokenizer* aNewTokenizer = new KSTokenizer( this );
-
-        aNewTokenizer->ProcessFile( aFile );
-
-        delete aNewTokenizer;
-
+        fContextStack.push( fChild );
+        fChild = aProcessor;
+        return;
+    }
+    void KSTokenizer::PopContext()
+    {
+        fChild = fContextStack.top();
+        fContextStack.pop();
         return;
     }
 
@@ -290,7 +295,7 @@ namespace Kassiopeia
         if( AtOneOf( fRightAngle ) )
         {
             //cout << "start element (1): " << fNameBuffer << std::endl;
-            fElementNames.push( fNameBuffer );
+            fElementStack.push( fNameBuffer );
 
             fBeginElement->SetElementName( fNameBuffer );
             ProcessToken( fBeginElement );
@@ -306,7 +311,7 @@ namespace Kassiopeia
         if( AtOneOf( fWhiteSpaceChars ) )
         {
             //cout << "start element (2): " << fNameBuffer << std::endl;
-            fElementNames.push( fNameBuffer );
+            fElementStack.push( fNameBuffer );
 
             fBeginElement->SetElementName( fNameBuffer );
             ProcessToken( fBeginElement );
@@ -339,8 +344,8 @@ namespace Kassiopeia
 
             if( AtOneOf( fRightAngle ) )
             {
-                fNameBuffer.assign( fElementNames.top() );
-                fElementNames.pop();
+                fNameBuffer.assign( fElementStack.top() );
+                fElementStack.pop();
 
                 //cout << "end element (4): " << fNameBuffer << std::endl;
 
@@ -534,15 +539,15 @@ namespace Kassiopeia
         if( AtOneOf( fRightAngle ) )
         {
             //std:://cout << "end element (1): " << fNameBuffer << std::endl;
-            if( fElementNames.top() != fNameBuffer )
+            if( fElementStack.top() != fNameBuffer )
             {
                 fErrorBuffer.clear();
-                fErrorBuffer = string( "expected closing element name <" ) + fElementNames.top() + string( ">, but got <" ) + fNameBuffer + string( "> instead" );
+                fErrorBuffer = string( "expected closing element name <" ) + fElementStack.top() + string( ">, but got <" ) + fNameBuffer + string( "> instead" );
 
                 fState = &KSTokenizer::ParseError;
                 return;
             }
-            fElementNames.pop();
+            fElementStack.pop();
 
             fEndElement->SetElementName( fNameBuffer );
             ProcessToken( fEndElement );
@@ -558,15 +563,15 @@ namespace Kassiopeia
         if( AtOneOf( fWhiteSpaceChars ) )
         {
             //std:://cout << "end element (2): " << fNameBuffer << std::endl;
-            if( fElementNames.top() != fNameBuffer )
+            if( fElementStack.top() != fNameBuffer )
             {
                 fErrorBuffer.clear();
-                fErrorBuffer = string( "expected closing element name <" ) + fElementNames.top() + string( ">, but got <" ) + fNameBuffer + string( "> instead" );
+                fErrorBuffer = string( "expected closing element name <" ) + fElementStack.top() + string( ">, but got <" ) + fNameBuffer + string( "> instead" );
 
                 fState = &KSTokenizer::ParseError;
                 return;
             }
-            fElementNames.pop();
+            fElementStack.pop();
 
             fEndElement->SetElementName( fNameBuffer );
             ProcessToken( fEndElement );

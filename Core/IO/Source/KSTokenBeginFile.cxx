@@ -8,6 +8,11 @@ namespace Kassiopeia
         fFilename( "" )
     {
     }
+    KSTokenBeginFile::KSTokenBeginFile( const KSTokenBeginFile& aCopy ) :
+            KSToken(),
+            fFilename( aCopy.fFilename )
+        {
+        }
     KSTokenBeginFile::~KSTokenBeginFile()
     {
     }

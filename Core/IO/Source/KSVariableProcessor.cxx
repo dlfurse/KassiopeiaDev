@@ -9,6 +9,7 @@ namespace Kassiopeia
 {
 
     KSVariableProcessor::KSVariableProcessor() :
+        KSProcessor(),
         fGlobalMap( new VariableMap() ),
         fFileMap( new VariableMap() ),
         fFileMapStack()
@@ -231,7 +232,7 @@ namespace Kassiopeia
 
         string Value;
         Value = aToken->GetAttributeValue();
-        while( Replace( Value ) == true );
+        while( Evaluate( Value ) == true );
         aToken->SetAttributeValue( Value );
 
         KSProcessor::ProcessToken( aToken );
@@ -252,7 +253,7 @@ namespace Kassiopeia
 
         string Value;
         Value = aToken->GetDataValue();
-        while( Replace( Value ) == true );
+        while( Evaluate( Value ) == true );
         aToken->SetDataValue( Value );
 
         KSProcessor::ProcessToken( aToken );
@@ -268,7 +269,7 @@ namespace Kassiopeia
 
         return;
     }
-    bool KSVariableProcessor::Replace( string& aString )
+    bool KSVariableProcessor::Evaluate( string& aString )
     {
         bool BracketFound = false;
 

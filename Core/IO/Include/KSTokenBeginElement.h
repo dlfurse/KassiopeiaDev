@@ -25,6 +25,7 @@ namespace Kassiopeia
     {
         public:
             KSTokenBeginElement();
+            KSTokenBeginElement( const KSTokenBeginElement& aCopy );
             virtual ~KSTokenBeginElement();
 
             void SetElementName( const string& name );

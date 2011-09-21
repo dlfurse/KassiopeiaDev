@@ -11,6 +11,7 @@ namespace Kassiopeia
     {
         public:
             KSTokenBeginParsing();
+            KSTokenBeginParsing( const KSTokenBeginParsing& aCopy );
             virtual ~KSTokenBeginParsing();
 
             virtual const string& GetTypeName() const;

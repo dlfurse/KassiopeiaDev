@@ -27,6 +27,7 @@ namespace Kassiopeia
     {
         public:
             KSTokenAttribute();
+            KSTokenAttribute( const KSTokenAttribute& aCopy );
             virtual ~KSTokenAttribute();
 
             void SetAttributeName( const string& name );

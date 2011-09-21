@@ -9,6 +9,12 @@ namespace Kassiopeia
         fValue( "" )
     {
     }
+    KSTokenAttribute::KSTokenAttribute( const KSTokenAttribute& aCopy) :
+        KSToken(),
+        fName( aCopy.fName ),
+        fValue( aCopy.fValue )
+    {
+    }
     KSTokenAttribute::~KSTokenAttribute()
     {
     }

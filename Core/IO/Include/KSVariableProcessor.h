@@ -28,7 +28,18 @@ namespace Kassiopeia
 
         private:
             void Reset();
-            bool Replace( string& aString );
+
+            typedef enum
+            {
+                eInactive, eActiveDefine, eActiveUndefine
+            } State;
+
+            State fState;
+            string fName;
+            string fValue;
+
+        private:
+            bool Evaluate( string& aString ); // returns true if a variable replacement was attempted
 
             typedef map< string, string > VariableMap;
             typedef VariableMap::value_type VariableEntry;
@@ -37,14 +48,6 @@ namespace Kassiopeia
             VariableMap* fGlobalMap;
             VariableMap* fFileMap;
             stack< VariableMap* > fFileMapStack;
-
-            typedef enum
-            {
-                eInactive, eActiveDefine, eActiveUndefine
-            } State;
-            State fState;
-            string fName;
-            string fValue;
 
             static const char fStartBracket = '{';
             static const char fEndBracket = '}';

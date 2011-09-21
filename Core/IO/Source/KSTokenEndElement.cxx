@@ -8,6 +8,11 @@ namespace Kassiopeia
         fName( "" )
     {
     }
+    KSTokenEndElement::KSTokenEndElement( const KSTokenEndElement& aCopy ) :
+        KSToken(),
+        fName( aCopy.fName )
+    {
+    }
     KSTokenEndElement::~KSTokenEndElement()
     {
     }

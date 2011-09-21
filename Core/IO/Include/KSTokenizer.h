@@ -18,6 +18,7 @@ namespace Kassiopeia
             KSTokenizer();
             KSTokenizer( KSTokenizer* anActiveTokenizer );
             virtual ~KSTokenizer();
+
         private:
             KSTokenizer* fOldTokenizer;
 
@@ -27,16 +28,22 @@ namespace Kassiopeia
 
         public:
             void ProcessFile( KSTextFile* aFile );
-            void IncludeFile( KSTextFile* aFile );
 
-            const string& GetFilePath();
-            const string& GetFileName();
-            const Int_t& GetFileLine();
-            const Int_t& GetFileColumn();
+            void PushContext( KSProcessor* aProcessor );
+            void PopContext();
+
+        private:
+            stack< KSProcessor* > fContextStack;
 
             //*******
             //queuing
             //*******
+
+        public:
+            const string& GetFilePath();
+            const string& GetFileName();
+            const Int_t& GetFileLine();
+            const Int_t& GetFileColumn();
 
         private:
             void ToNext();
@@ -78,7 +85,7 @@ namespace Kassiopeia
             void (KSTokenizer::*fInitialState)();
             void (KSTokenizer::*fFinalState)();
 
-            stack< string > fElementNames;
+            stack< string > fElementStack;
 
             //********
             //shipping
@@ -102,6 +109,7 @@ namespace Kassiopeia
             //character sets
             //**************
 
+        private:
             static const string fSpace;
             static const string fTab;
             static const string fNewLine;

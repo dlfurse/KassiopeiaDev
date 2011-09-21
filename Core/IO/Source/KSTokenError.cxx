@@ -8,6 +8,11 @@ namespace Kassiopeia
         fMessage( "" )
     {
     }
+    KSTokenError::KSTokenError( const KSTokenError& aCopy ) :
+        KSToken(),
+        fMessage( aCopy.fMessage )
+    {
+    }
     KSTokenError::~KSTokenError()
     {
     }

@@ -7,6 +7,10 @@ namespace Kassiopeia
         KSToken()
     {
     }
+    KSTokenEndParsing::KSTokenEndParsing( const KSTokenEndParsing& /*aCopy*/ ) :
+        KSToken()
+    {
+    }
     KSTokenEndParsing::~KSTokenEndParsing()
     {
     }
