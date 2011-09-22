@@ -1,18 +1,18 @@
-#include "KScatterBasicElasticCalculatorFerenc.h"
+#include "KScatteringCalculatorElastic.h"
 #include "KSRandom.h"
 #include "KSConst.h"
 
 
 using namespace std;
 namespace Kassiopeia{
-KScatterBasicElasticCalculatorFerenc::KScatterBasicElasticCalculatorFerenc()
+KScatteringCalculatorElastic::KScatteringCalculatorElastic()
 {}
 
-KScatterBasicElasticCalculatorFerenc::~KScatterBasicElasticCalculatorFerenc(){
+KScatteringCalculatorElastic::~KScatteringCalculatorElastic(){
 	//not needed
 }
 
-Double_t KScatterBasicElasticCalculatorFerenc::sigmael(Double_t anE){
+Double_t KScatteringCalculatorElastic::sigmael(Double_t anE){
 
 	const Double_t e[14]={0.,1.5,5.,7.,10.,15.,20.,30.,60.,100.,150.,200.,300.,400.};
 	const Double_t s[14]={9.6,13.,15.,12.,10.,7.,5.6,3.3,1.1,0.9,0.5,0.36,0.23,0.15};
@@ -38,7 +38,7 @@ Double_t KScatterBasicElasticCalculatorFerenc::sigmael(Double_t anE){
 
 }
 
-void KScatterBasicElasticCalculatorFerenc::randomel(Double_t anE,Double_t& Eloss,Double_t& Theta){ //ToDO: vernuenftige einheiten, constanten woanderst definieren.
+void KScatteringCalculatorElastic::randomel(Double_t anE,Double_t& Eloss,Double_t& Theta){ //ToDO: vernuenftige einheiten, constanten woanderst definieren.
 
     //std::cout<<"In randomel, calculating an elastic scattering event"<<std::endl;
 
@@ -73,7 +73,7 @@ void KScatterBasicElasticCalculatorFerenc::randomel(Double_t anE,Double_t& Eloss
 	return;
 }
 
-Double_t KScatterBasicElasticCalculatorFerenc::DiffXSecEl(Double_t anE,Double_t cosTheta){
+Double_t KScatteringCalculatorElastic::DiffXSecEl(Double_t anE,Double_t cosTheta){
 
 	//Double_t a02=28.e-22;   // Bohr radius squared
 	Double_t a02 = KSConst::BohrRadiusSquared();

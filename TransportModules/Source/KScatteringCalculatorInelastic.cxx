@@ -1,4 +1,4 @@
-#include "KScatterBasicInelasticCalculatorFerenc.h"
+#include "KScatteringCalculatorInelastic.h"
 #include "KSIOToolbox.h"
 #include "KSTextFile.h"
 
@@ -12,7 +12,7 @@ using std::fstream;
 
 using namespace std;
 namespace Kassiopeia{
-KScatterBasicInelasticCalculatorFerenc::KScatterBasicInelasticCalculatorFerenc() :
+KScatteringCalculatorInelastic::KScatteringCalculatorInelastic() :
                 fDataFile(),
                 fIonizationEnergy(0),
                 fMoleculeType(""),
@@ -22,12 +22,12 @@ KScatterBasicInelasticCalculatorFerenc::KScatterBasicInelasticCalculatorFerenc()
     KSIOToolbox::GetInstance()->AddDataTextFile(&fDataFile);
 }
 
-KScatterBasicInelasticCalculatorFerenc::~KScatterBasicInelasticCalculatorFerenc()
+KScatteringCalculatorInelastic::~KScatteringCalculatorInelastic()
 {
 	//not needed
 }
 
-void KScatterBasicInelasticCalculatorFerenc::setmolecule(const std::string& aMolecule)
+void KScatteringCalculatorInelastic::setmolecule(const std::string& aMolecule)
 {
     
     //E < "KScatterBasicInelasticCalculatorFerenc::setmolecule";
@@ -41,13 +41,13 @@ void KScatterBasicInelasticCalculatorFerenc::setmolecule(const std::string& aMol
     }
     return;
 }
-Double_t KScatterBasicInelasticCalculatorFerenc::GetIonizationEnergy()
+Double_t KScatteringCalculatorInelastic::GetIonizationEnergy()
 {
 	return fIonizationEnergy;
 }
 
 
-Double_t KScatterBasicInelasticCalculatorFerenc::sigmaexc(Double_t anE){
+Double_t KScatteringCalculatorInelastic::sigmaexc(Double_t anE){
 	//TODO: move constants somewhere. precision?
 
 	const Double_t a02 = KSConst::BohrRadiusSquared();
@@ -68,7 +68,7 @@ Double_t KScatterBasicInelasticCalculatorFerenc::sigmaexc(Double_t anE){
 
 }
 
-void KScatterBasicInelasticCalculatorFerenc::randomexc(Double_t anE,Double_t& Eloss,Double_t& Theta) //Todo: move static stuff to constructor. constants and precision?
+void KScatteringCalculatorInelastic::randomexc(Double_t anE,Double_t& Eloss,Double_t& Theta) //Todo: move static stuff to constructor. constants and precision?
 {
 
 	static Int_t iff=0;
@@ -255,7 +255,7 @@ Double_t KScatterBasicInelasticCalculatorFerenc::sigmaion(Double_t anE){ //TODO:
 
 }
  */
-Double_t KScatterBasicInelasticCalculatorFerenc::sigmaion(Double_t anE)
+Double_t KScatteringCalculatorInelastic::sigmaion(Double_t anE)
 {
     //KSException Except;
     //Except < "KScatterBasicInelasticCalculatorFerenc::sigmaion";
@@ -351,7 +351,7 @@ Double_t KScatterBasicInelasticCalculatorFerenc::sigmaion(Double_t anE)
 
 }
 
-Bool_t KScatterBasicInelasticCalculatorFerenc::ReadData(){
+Bool_t KScatteringCalculatorInelastic::ReadData(){
 	//TODO replace path with the one specified in the core manager
     
     
@@ -407,7 +407,7 @@ Bool_t KScatterBasicInelasticCalculatorFerenc::ReadData(){
 	return FindMinimum();
 }
 
-Bool_t KScatterBasicInelasticCalculatorFerenc::FindMinimum() {
+Bool_t KScatteringCalculatorInelastic::FindMinimum() {
 	Double_t aMinimum = 999999.99;
 	for (UInt_t io = 0; io < fOrbitalEnergy.size(); io++){
 		if (aMinimum > fOrbitalEnergy[io]) fMinimum = (Int_t) io;
@@ -416,7 +416,7 @@ Bool_t KScatterBasicInelasticCalculatorFerenc::FindMinimum() {
 	else return false;
 }
 
-void KScatterBasicInelasticCalculatorFerenc::randomion(Double_t anE,Double_t& Eloss,Double_t& Theta){
+void KScatteringCalculatorInelastic::randomion(Double_t anE,Double_t& Eloss,Double_t& Theta){
 	// << "Eloss Computation" << endl;
 
   	//Double_t Ei=15.45/27.21;
@@ -561,7 +561,7 @@ void KScatterBasicInelasticCalculatorFerenc::randomion(Double_t anE,Double_t& El
 }//end randomion
 
 
-Double_t KScatterBasicInelasticCalculatorFerenc::DiffXSecExc(Double_t anE,Double_t cosTheta){
+Double_t KScatteringCalculatorInelastic::DiffXSecExc(Double_t anE,Double_t cosTheta){
 	Double_t K2,K,T,theta;
 	Double_t sigma = 0.;
 	//Double_t a02=28.e-22;   // Bohr radius squared
@@ -601,7 +601,7 @@ Double_t KScatterBasicInelasticCalculatorFerenc::DiffXSecExc(Double_t anE,Double
 }//end DiffXSecExc
 
 
-Double_t KScatterBasicInelasticCalculatorFerenc::DiffXSecInel(Double_t anE,Double_t cosTheta){
+Double_t KScatteringCalculatorInelastic::DiffXSecInel(Double_t anE,Double_t cosTheta){
 
 	//Double_t a02=28.e-22;   // Bohr radius squared
 	Double_t a02 = KSConst::BohrRadiusSquared();
@@ -660,7 +660,7 @@ Double_t KScatterBasicInelasticCalculatorFerenc::DiffXSecInel(Double_t anE,Doubl
 
 
 
-void KScatterBasicInelasticCalculatorFerenc::gensecelen(Double_t anE,Double_t& W){ //TODO
+void KScatteringCalculatorInelastic::gensecelen(Double_t anE,Double_t& W){ //TODO
 
 	Double_t IonizationEnergy_eV = GetIonizationEnergy();		//ionization energy in eV
 	Double_t /*Ei=15.45,*/eps2=14.3,b=6.25;
@@ -680,7 +680,7 @@ void KScatterBasicInelasticCalculatorFerenc::gensecelen(Double_t anE,Double_t& W
 }
 
 
-Double_t KScatterBasicInelasticCalculatorFerenc::sigmainel(Double_t anE){
+Double_t KScatteringCalculatorInelastic::sigmainel(Double_t anE){
 
 	if ( anE < 250.){
         
@@ -710,7 +710,7 @@ Double_t KScatterBasicInelasticCalculatorFerenc::sigmainel(Double_t anE){
 /////////////////////////////////////////////////////////////
 //private helper methods
 
-Double_t KScatterBasicInelasticCalculatorFerenc::sumexc(Double_t K)
+Double_t KScatteringCalculatorInelastic::sumexc(Double_t K)
 {
 	Double_t Kvec[15]={0.,0.1,0.2,0.4,0.6,0.8,1.,1.2,1.5,1.8,2.,2.5,3.,4.,5.};
 	Double_t fvec[7][15]=
@@ -766,7 +766,7 @@ Double_t KScatterBasicInelasticCalculatorFerenc::sumexc(Double_t K)
 }//end sumexc
 
 
-Double_t KScatterBasicInelasticCalculatorFerenc::sigmadiss10(Double_t anE)
+Double_t KScatteringCalculatorInelastic::sigmadiss10(Double_t anE)
 {
 
 	Double_t a[9]={-2.297914361e5,5.303988579e5,-5.316636672e5,
@@ -795,7 +795,7 @@ Double_t KScatterBasicInelasticCalculatorFerenc::sigmadiss10(Double_t anE)
 }
 
 
-Double_t KScatterBasicInelasticCalculatorFerenc::sigmadiss15(Double_t anE)
+Double_t KScatteringCalculatorInelastic::sigmadiss15(Double_t anE)
 {
 
 	Double_t a[9]={ -1.157041752e3,1.501936271e3,-8.6119387e2,
@@ -823,7 +823,7 @@ Double_t KScatterBasicInelasticCalculatorFerenc::sigmadiss15(Double_t anE)
 	return sigma*1.e-4;
 }
 
-Double_t KScatterBasicInelasticCalculatorFerenc::sigmaBC(Double_t anE)
+Double_t KScatteringCalculatorInelastic::sigmaBC(Double_t anE)
 {
 
 	Double_t aB[9]={-4.2935194e2, 5.1122109e2, -2.8481279e2,

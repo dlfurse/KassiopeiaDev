@@ -1,5 +1,5 @@
-#ifndef KTRACKSCATTERING_H_
-#define KTRACKSCATTERING_H_
+#ifndef KSCATTERING_H_
+#define KSCATTERING_H_
 
 #include "KSDiscreteProcess.h"
 #include "KSStepSize.h"
@@ -13,12 +13,12 @@ namespace Kassiopeia
     class KSParticle;
     class DensityCalculator;
 
-    class KTrackScattering:
+    class KScattering:
         public KSDiscreteProcess
     {
         public:
-            KTrackScattering();
-            virtual ~KTrackScattering();
+            KScattering();
+            virtual ~KScattering();
 
             //**************
             //identification
@@ -67,6 +67,7 @@ namespace Kassiopeia
             virtual Double_t ComputeTimeStep();
             virtual Bool_t Execute() = 0;
             virtual Double_t& ComputeProbability();
+            void UpdateParticleMomentum(const Double_t& ke_SI, const Double_t& theta, const Double_t& phi); // updates final particle momentum according to parameters given.  ke_SI is the new energy in SI UNITS, theta is the angle to the previous momentum in DEGREES, phi is the angle from the vector normal to the plane formed by the previous momentum and the z-axis in DEGREES
 
             Double_t GetScatteringProbability() const;
             Double_t GetDiffScatteringProbability() const;
@@ -74,37 +75,37 @@ namespace Kassiopeia
             Double_t GetFinalCrossSection() const;
 
         protected:
-            mutable Double_t fScatteringProbability;
+            Double_t fScatteringProbability;
 
             mutable Double_t fInitialCrossSection;
-            mutable Double_t (KTrackScattering::*fGetInitialCrossSectionPtr)() const;
+            mutable Double_t (KScattering::*fGetInitialCrossSectionPtr)() const;
             virtual Double_t GetInitialCrossSection_Recalculate() const = 0;
             Double_t GetInitialCrossSection_Cached() const;
 
             mutable Double_t fFinalCrossSection;
-            mutable Double_t (KTrackScattering::*fGetFinalCrossSectionPtr)() const;
+            mutable Double_t (KScattering::*fGetFinalCrossSectionPtr)() const;
             virtual Double_t GetFinalCrossSection_Recalculate() const = 0;
             Double_t GetFinalCrossSection_Cached() const;
     };
 
-    inline const string KTrackScattering::GetInteraction() const
+    inline const string KScattering::GetInteraction() const
     {
         return fInteraction;
     }
-    inline void KTrackScattering::SetSpecies( const string& species )
+    inline void KScattering::SetSpecies( const string& species )
     {
         fSpecies = species;
         return;
     }
-    inline const string KTrackScattering::GetSpecies() const
+    inline const string KScattering::GetSpecies() const
     {
         return fSpecies;
     }
-    inline void KTrackScattering::SetDensityCalculator( DensityCalculator* const denscal )
+    inline void KScattering::SetDensityCalculator( DensityCalculator* const denscal )
     {
         fDensityCalculator = denscal;
     }
-    Bool_t KTrackScattering::AddStepSize( KSStepSize* aSubStepSize )
+    Bool_t KScattering::AddStepSize( KSStepSize* aSubStepSize )
     {
         if( (aSubStepSize->AddParent( this ) == kTRUE) && (fSubStepSizes.AddElement( aSubStepSize ) != -1) )
         {
@@ -116,7 +117,7 @@ namespace Kassiopeia
         }
         return kFALSE;
     }
-    Bool_t KTrackScattering::RemoveStepSize( KSStepSize* aSubStepSize )
+    Bool_t KScattering::RemoveStepSize( KSStepSize* aSubStepSize )
     {
         if( fSubStepSizes.RemoveElement( aSubStepSize ) != -1 )
         {
@@ -131,4 +132,4 @@ namespace Kassiopeia
 
 }
 
-#endif /* KTRACKSCATTERING_H_ */
+#endif /* KSCATTERING_H_ */

@@ -99,7 +99,7 @@ namespace Kassiopeia {
     
     template <class T>
     void KMath::Shuffle(T* anArray, Int_t aLength) {
-        KSRandom *tRand = KSRandom::fInstance;
+        KSRandom *tRand = KSRandom::GetInstance();
         for (Int_t iElement=aLength-1; iElement>0; iElement--) {
             Int_t iToSwap = TMath::Nint(tRand->Uniform((Double_t)(iElement)));
             std::swap(anArray[iToSwap], anArray[iElement]);
@@ -109,7 +109,7 @@ namespace Kassiopeia {
     
     template <class Iterator>
     void KMath::Shuffle(Iterator anIterFirst, Iterator anIterLast) {
-        KSRandom *tRand = KSRandom::fInstance;
+        KSRandom *tRand = KSRandom::GetInstance();
         Int_t tNElements = anIterLast - anIterFirst;
         for (Int_t iElement=tNElements-1; iElement>0; iElement--) {
             Int_t iToSwap = TMath::Nint(tRand->Uniform((Double_t)(iElement)));
@@ -120,7 +120,7 @@ namespace Kassiopeia {
     
     template <class T>
     void KMath::Shuffle(TVectorT<T>& aTVec) {
-        KSRandom *tRand = KSRandom::fInstance;
+        KSRandom *tRand = KSRandom::GetInstance();
         Int_t tNElements = aTVec.GetNoElements();
         for (Int_t iElement=tNElements-1; iElement>0; iElement--) {
             Int_t iToSwap = TMath::Nint(tRand->Uniform((Double_t)(iElement)));

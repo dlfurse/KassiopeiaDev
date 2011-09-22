@@ -29,10 +29,13 @@ TRANSPORTMODULES_HEADERFILES = \
 	../Include/KTrackStepSizeConst.h\
 	../Include/KTrackStepSizeEnergy.h\
 	../Include/KTrackStepSizeNumError.h\
-	../Include/KTrackScattering.h\
-	../Include/KTrackScatteringElastic.h\
-	../Include/KScatterBasicElasticCalculatorFerenc.h\
-	../Include/KScatterBasicInelasticCalculatorFerenc.h\
+	../Include/KScatteringStepSize.h\
+	../Include/KScattering.h\
+	../Include/KScatteringElastic.h\
+	../Include/KScatteringExcitation.h\
+	../Include/KScatteringIonisation.h\
+	../Include/KScatteringCalculatorElastic.h\
+	../Include/KScatteringCalculatorInelastic.h\
 	../Include/DensityCalculator.h\
 	../Include/ConstantDensityCalculator.h
 	
@@ -54,10 +57,13 @@ TRANSPORTMODULES_SOURCEFILES = \
 	../Source/KTrackStepSizeConst.cxx\
 	../Source/KTrackStepSizeEnergy.cxx\
 	../Source/KTrackStepSizeNumError.cxx\
-	../Source/KTrackScattering.cxx\
-	../Source/KTrackScatteringElastic.cxx\
-	../Source/KScatterBasicElasticCalculatorFerenc.cxx\
-	../Source/KScatterBasicInelasticCalculatorFerenc.cxx\
+	../Source/KScatteringStepSize.cxx\
+	../Source/KScattering.cxx\
+	../Source/KScatteringElastic.cxx\
+	../Source/KScatteringExcitation.cxx\
+	../Source/KScatteringIonisation.cxx\
+	../Source/KScatteringCalculatorElastic.cxx\
+	../Source/KScatteringCalculatorInelastic.cxx\
 	../Source/DensityCalculator.cxx\
 	../Source/ConstantDensityCalculator.cxx
     

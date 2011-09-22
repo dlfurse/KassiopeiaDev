@@ -2,15 +2,15 @@
 #define KSSTEP_H_
 
 #include "KSQueue.h"
+#include "KSParticle.h"
+#include "KSTrack.h"
+#include "KSRootProcess.h"
 
 #include "Rtypes.h"
 #include "TVector3.h"
 
 namespace Kassiopeia
 {
-
-    class KSParticle;
-    class KSTrack;
 
     class KSStep
     {
@@ -24,7 +24,10 @@ namespace Kassiopeia
             void SetFinalParticle( KSParticle* const aFinalParticle );
             KSParticle* GetFinalParticle() const;
 
-            Double_t GetPathLength(); //todo:calculation of pathlenght witch caching and stuff
+            KSQueue< KSTrack* >* GetSecondaryQueue() const;
+
+            Double_t GetPathLength() const;
+
 
         private:
             Int_t fTrackId;
@@ -66,6 +69,17 @@ namespace Kassiopeia
     inline KSParticle* KSStep::GetFinalParticle() const
     {
         return fFinalParticle;
+    }
+    inline KSQueue< KSTrack* >* KSStep::GetSecondaryQueue() const
+    {
+        return fSecondaryQueue;
+    }
+
+    inline Double_t KSStep::GetPathLength() const
+    {
+        Double_t AverageSpeed = (fInitialParticle->GetSpeed() + fFinalParticle->GetSpeed())/2.0;
+        Double_t TimeStep = KSRootProcess::GetInstance()->GetTimeStep();
+        return TimeStep * AverageSpeed;
     }
 
 }

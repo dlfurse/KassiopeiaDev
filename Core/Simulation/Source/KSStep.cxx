@@ -1,4 +1,5 @@
 #include "KSStep.h"
+#include "KSQueue.h"
 
 namespace Kassiopeia
 {
@@ -15,12 +16,14 @@ namespace Kassiopeia
         fDecayOccurred( kFALSE ),
         fDecayDeltaE( 0. ),
         fInitialParticle( NULL ),
-        fFinalParticle( NULL )
+        fFinalParticle( NULL ),
+        fSecondaryQueue(new KSQueue<KSTrack*>())
     {
     }
 
     KSStep::~KSStep()
     {
+        delete fSecondaryQueue;
     }
 
 }

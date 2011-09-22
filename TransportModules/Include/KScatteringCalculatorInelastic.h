@@ -1,5 +1,5 @@
-#ifndef KScatterBasicInelasticCalculatorFerenc_h
-#define KScatterBasicInelasticCalculatorFerenc_h
+#ifndef KScatteringCalculatorInelastic_h
+#define KScatteringCalculatorInelastic_h
 
 /** @file
  @brief contains KScatterBasicInelasticCalculatorFerenc
@@ -59,15 +59,15 @@
 
 
 namespace Kassiopeia{
-class KScatterBasicInelasticCalculatorFerenc
+class KScatteringCalculatorInelastic
 {
     public:
 
 	// constructor
-	KScatterBasicInelasticCalculatorFerenc();
+	KScatteringCalculatorInelastic();
 
 	//!destructor.
-	virtual ~KScatterBasicInelasticCalculatorFerenc();
+	virtual ~KScatteringCalculatorInelastic();
 	
 	/*!
 	\brief set the molecule type for which calculations will be performed
@@ -260,4 +260,4 @@ protected:
 	Int_t fMinimum; //position of orbital with minimal energy.
 };
 }
-#endif //KScatterBasicInelasticCalculatorFerenc_h
+#endif //KScatteringCalculatorInelastic_h

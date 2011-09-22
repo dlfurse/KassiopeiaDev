@@ -1,5 +1,5 @@
-#ifndef KScatterBasicElasticCalculatorFerenc_h
-#define KScatterBasicElasticCalculatorFerenc_h
+#ifndef KScatteringCalculatorElastic_h
+#define KScatteringCalculatorElastic_h
 
 /** @file
  @brief contains KScatterBasicElasticCalculatorFerenc
@@ -42,15 +42,15 @@
 
 namespace Kassiopeia{
 
-class KScatterBasicElasticCalculatorFerenc
+class KScatteringCalculatorElastic
 {
 
     public:
 	//!constructor.
-	KScatterBasicElasticCalculatorFerenc();
+	KScatteringCalculatorElastic();
 
 	//!destructor.
-	virtual ~KScatterBasicElasticCalculatorFerenc();
+	virtual ~KScatteringCalculatorElastic();
 
 	/*!
     \brief elastric cross section in m^2
@@ -94,4 +94,4 @@ protected:
 	Double_t DiffXSecEl(Double_t anE,Double_t cosTheta);
 };
 }
-#endif //KScatterBasicElasticCalculatorFerenc_h
+#endif //KScatteringCalculatorElastic_h
