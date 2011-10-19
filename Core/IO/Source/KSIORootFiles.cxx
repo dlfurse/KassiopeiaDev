@@ -1,5 +1,7 @@
 #include "KSIORootFiles.h"
 
+#include "KSIOToolbox.h"
+
 namespace Kassiopeia
 {
 

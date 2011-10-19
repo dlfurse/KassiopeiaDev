@@ -1,11 +1,3 @@
 #!/bin/sh
 
 autoreconf --force --install --verbose
-AUTORECONFRETURN=$?
-
-
-if [ ${AUTORECONFRETURN} -eq 0 ]
- then
-    ./configure --enable-silent-rules $@
-fi
-

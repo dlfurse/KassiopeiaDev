@@ -12,33 +12,31 @@ namespace Kassiopeia
     class KSManagerFactory
     {
         public:
-            KSManagerFactory();
+            KSManagerFactory( const string& aKey, KSManager* (*aConstructor)() );
             virtual ~KSManagerFactory();
 
-            virtual KSManager* Build() const = 0;
-            virtual const string& GetTypeName() const = 0;
-    };
+        private:
+            KSManagerFactory();
 
-    template< class XManagerType >
-    class KSManagerFactoryPrototype
-    {
+            //**************
+            //identification
+            //**************
+
         public:
-            KSManagerFactoryPrototype()
-            {
-            }
-            virtual ~KSManagerFactoryPrototype()
-            {
-            }
+            const string& GetManagerKey() const;
 
-            virtual KSManager* Build() const
-            {
-                return new XManagerType();
-            }
+        protected:
+            string fKey;
 
-            virtual const string& GetTypeName() const
-            {
-                return XManagerType::fTypeName;
-            }
+            //************
+            //construction
+            //************
+
+        public:
+            virtual KSManager* BuildManager() const ;
+
+        protected:
+            KSManager* (*fConstructor)();
     };
 
 }

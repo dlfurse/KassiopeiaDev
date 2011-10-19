@@ -29,12 +29,11 @@ int main()
 
     tIOTB->SetTerminalVerbosity( 10 );
     tIOTB->SetLogVerbosity( 10 );
-    tIOTB->GetLogTextFile()->AddToPaths(".");
     tIOTB->GetLogTextFile()->Open( KSFile::eWrite );
 
     iomsg + 6;
     iomsg < "TestMessage::main";
-    iomsg << "this is a bizarro message" << eom;
+    iomsg << "this is a debug message that should end up in the log" << eom;
 
     tIOTB->GetLogTextFile()->Close();
 

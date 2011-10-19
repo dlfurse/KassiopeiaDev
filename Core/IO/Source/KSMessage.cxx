@@ -24,8 +24,8 @@ namespace Kassiopeia
     const KSMessageNewline ret = KSMessageNewline();
     const KSMessageEnd eom = KSMessageEnd();
 
-    KSMessage::KSMessage( const string& aKey ) :
-        fKey( aKey ),
+    KSMessage::KSMessage() :
+        fKey( "" ),
         fSystemDescription( "GENERIC" ),
         fSystemPrefix( "" ),
         fSystemSuffix( "" ),
@@ -70,19 +70,62 @@ namespace Kassiopeia
         fLogVerbosity( eNormal ),
         fLogFile( NULL )
     {
-        KSIOToolbox::GetInstance()->AddMessage( this );
     }
     KSMessage::~KSMessage()
     {
-        KSIOToolbox::GetInstance()->RemoveMessage( this );
     }
 
     const string& KSMessage::GetKey()
     {
         return fKey;
     }
+    void KSMessage::SetKey( const string& aKey )
+    {
+        fKey = aKey;
+        return;
+    }
 
     KSMessage& KSMessage::operator+( const KSMessageSeverity& aSeverity )
+    {
+        SetSeverity( aSeverity );
+        return *this;
+    }
+    KSMessage& KSMessage::operator()( const KSMessageSeverity& aSeverity )
+    {
+        SetSeverity( aSeverity );
+        return *this;
+    }
+
+    KSMessage& KSMessage::operator<( const KSMessageNewline& )
+    {
+        fOriginLines.push_back( fOriginLine.str() );
+
+        fOriginLine.clear();
+        fOriginLine.str( "" );
+
+        return *this;
+    }
+    KSMessage& KSMessage::operator<( const KSMessageEnd& )
+    {
+        Flush();
+        return *this;
+    }
+
+    KSMessage& KSMessage::operator<<( const KSMessageNewline& )
+    {
+        fMessageLines.push_back( fMessageLine.str() );
+
+        fMessageLine.clear();
+        fMessageLine.str( "" );
+        return *this;
+    }
+    KSMessage& KSMessage::operator<<( const KSMessageEnd& )
+    {
+        Flush();
+        return *this;
+    }
+
+    void KSMessage::SetSeverity( const KSMessageSeverity& aSeverity )
     {
         fDescriptionBuffer.clear();
         fDescriptionBuffer.str( "" );
@@ -124,38 +167,9 @@ namespace Kassiopeia
         fSeverity = aSeverity;
         fDescription = fDescriptionBuffer.str();
 
-        return *this;
+        return;
     }
-
-    KSMessage& KSMessage::operator<( const KSMessageNewline& )
-    {
-        fOriginLines.push_back( fOriginLine.str() );
-
-        fOriginLine.clear();
-        fOriginLine.str( "" );
-
-        return *this;
-    }
-    KSMessage& KSMessage::operator<( const KSMessageEnd& )
-    {
-        Print();
-        return *this;
-    }
-
-    KSMessage& KSMessage::operator<<( const KSMessageNewline& )
-    {
-        fMessageLines.push_back( fMessageLine.str() );
-
-        fMessageLine.clear();
-        fMessageLine.str( "" );
-        return *this;
-    }
-    KSMessage& KSMessage::operator<<( const KSMessageEnd& )
-    {
-        Print();
-        return *this;
-    }
-    void KSMessage::Print()
+    void KSMessage::Flush()
     {
         fOriginLines.push_back( fOriginLine.str() );
         fMessageLines.push_back( fMessageLine.str() );

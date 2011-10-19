@@ -2,9 +2,15 @@
 
 #include "KSTextFile.h"
 #include "KSRootFile.h"
-#include "KSMessage.h"
 
+#include "KSMessage.h"
 #include "KSIOMessage.h"
+
+#include "KSTokenizer.h"
+#include "KSVariableProcessor.h"
+#include "KSIncludeProcessor.h"
+#include "KSLoopProcessor.h"
+#include "KSBuilderProcessor.h"
 
 #include "KSAssert.h"
 
@@ -46,6 +52,10 @@ KSASSERT( false, KASSIOPEIA_LOG_DEFAULT_DIR_was_not_defined )
 #define KASSIOPEIA_LOG_DEFAULT_DIR_STRING AS_STRING(KASSIOPEIA_LOG_DEFAULT_DIR)
 #endif
 
+#include <iostream>
+using std::cout;
+using std::endl;
+
 namespace Kassiopeia
 {
 
@@ -61,16 +71,19 @@ namespace Kassiopeia
     KSIOToolbox::KSIOToolbox() :
         KSManager( "IO" ),
         fConfigTextFileMap(),
-        fConfigUserDir( "" ),
+        fConfigUserDirs(),
         fConfigDefaultDir( KASSIOPEIA_CONFIG_DEFAULT_DIR_STRING ),
         fDataTextFileMap(),
         fDataRootFileMap(),
-        fDataUserDir( "" ),
+        fDataUserDirs(),
         fDataDefaultDir( KASSIOPEIA_CONFIG_DEFAULT_DIR_STRING ),
         fScratchTextFileMap(),
         fScratchRootFileMap(),
-        fScratchUserDir( "" ),
+        fScratchUserDirs(),
         fScratchDefaultDir( KASSIOPEIA_SCRATCH_DEFAULT_DIR_STRING ),
+        fMessageMap(),
+        fTerminalVerbosity( eNormal ),
+        fLogVerbosity( eNormal ),
         fOutputRootFile( new KSRootFile() ),
         fOutputUserBase( "" ),
         fOutputDefaultBase( "KassiopeiaOutput.root" ),
@@ -81,10 +94,12 @@ namespace Kassiopeia
         fLogDefaultBase( "KassiopeiaLog.txt" ),
         fLogUserDir( "" ),
         fLogDefaultDir( KASSIOPEIA_LOG_DEFAULT_DIR_STRING ),
-        fMessageMap(),
-        fTerminalVerbosity( eNormal ),
-        fLogVerbosity( eNormal )
-
+        fVariableMap(),
+        fTokenizer( new KSTokenizer() ),
+        fVariableProcessor( new KSVariableProcessor() ),
+        fIncludeProcessor( new KSIncludeProcessor() ),
+        fLoopProcessor( new KSLoopProcessor() ),
+        fBuilderProcessor( new KSBuilderProcessor() )
     {
         fOutputRootFile->SetKey( "Output" );
         fOutputRootFile->AddToPaths( fOutputDefaultDir );
@@ -93,8 +108,37 @@ namespace Kassiopeia
         fLogTextFile->SetKey( "Log" );
         fLogTextFile->AddToPaths( fLogDefaultDir );
         fLogTextFile->AddToBases( fLogDefaultBase );
+
+        fTokenizer->DropProcessor( fVariableProcessor );
+        fTokenizer->DropProcessor( fIncludeProcessor );
+        fTokenizer->DropProcessor( fLoopProcessor );
+        fTokenizer->DropProcessor( fBuilderProcessor );
+
+        KSToolboxBuilder< KSIOToolbox >::SetToolbox( this );
     }
     KSIOToolbox::~KSIOToolbox()
+    {
+        delete fLoopProcessor;
+        delete fIncludeProcessor;
+        delete fVariableProcessor;
+    }
+
+    //****************
+    //subclass control
+    //****************
+
+    void KSIOToolbox::SetupManagerSubclass()
+    {
+    }
+    void KSIOToolbox::PrepareManagerSubclass()
+    {
+        this->ProcessConfigFile( "io" );
+        return;
+    }
+    void KSIOToolbox::ShutdownManagerSubclass()
+    {
+    }
+    void KSIOToolbox::AbortManagerSubclass()
     {
     }
 
@@ -104,17 +148,27 @@ namespace Kassiopeia
 
     void KSIOToolbox::AddConfigTextFile( KSTextFile* aConfigFile )
     {
-        TextFileIt TIt = fConfigTextFileMap.find( aConfigFile->GetKey() );
+        string aKey = aConfigFile->GetKey();
+        TextFileIt TIt = fConfigTextFileMap.find( aKey );
         if( TIt == fConfigTextFileMap.end() )
         {
+            aConfigFile->AddToBases( aKey + fConfigTextExtension );
             aConfigFile->AddToPaths( fConfigDefaultDir );
-            if( fConfigUserDir.empty() == kFALSE )
+            DirListIt DIt;
+            for( DIt = fConfigUserDirs.begin(); DIt != fConfigUserDirs.end(); DIt++ )
             {
-                aConfigFile->AddToPaths( fConfigUserDir );
+                TIt->second->AddToPaths( *DIt );
             }
 
-            fConfigTextFileMap.insert( TextFileEntry( aConfigFile->GetKey(), aConfigFile ) );
+            fConfigTextFileMap.insert( TextFileEntry( aKey, aConfigFile ) );
+
+#ifdef KASSIOPEIA_IO_DEBUG_VERBOSE
+            iomsg < "KSIOToolbox::AddConfigTextFile";
+            iomsg( eDebug ) << "added new config file with key <" << aKey << ">" << eom;
+#endif
+
         }
+
         return;
     }
     KSTextFile* KSIOToolbox::GetConfigTextFile( const string& aKey )
@@ -126,7 +180,7 @@ namespace Kassiopeia
         }
         return NULL;
     }
-    KSTextFile* KSIOToolbox::DemandConfigFile( const string& aKey )
+    KSTextFile* KSIOToolbox::DemandConfigTextFile( const string& aKey )
     {
         TextFileIt TIt = fConfigTextFileMap.find( aKey );
         if( TIt != fConfigTextFileMap.end() )
@@ -136,12 +190,14 @@ namespace Kassiopeia
         else
         {
             KSTextFile* aConfigFile = new KSTextFile();
-            aConfigFile->SetKey( aKey );
 
+            aConfigFile->SetKey( aKey );
+            aConfigFile->AddToBases( aKey + fConfigTextExtension );
             aConfigFile->AddToPaths( fConfigDefaultDir );
-            if( fConfigUserDir.empty() == kFALSE )
+            DirListIt DIt;
+            for( DIt = fConfigUserDirs.begin(); DIt != fConfigUserDirs.end(); DIt++ )
             {
-                aConfigFile->AddToPaths( fConfigUserDir );
+                aConfigFile->AddToPaths( *DIt );
             }
 
             fConfigTextFileMap.insert( TextFileEntry( aConfigFile->GetKey(), aConfigFile ) );
@@ -149,7 +205,19 @@ namespace Kassiopeia
             return aConfigFile;
         }
     }
-    void KSIOToolbox::SetConfigUserDirectory( const string& aDirectory )
+    void KSIOToolbox::RemoveConfigTextFile( KSTextFile* aConfigFile )
+    {
+        const string& aKey = aConfigFile->GetKey();
+        TextFileIt TIt = fConfigTextFileMap.find( aKey );
+        if( TIt != fConfigTextFileMap.end() )
+        {
+            fConfigTextFileMap.erase( TIt );
+        }
+        return;
+    }
+    const string KSIOToolbox::fConfigTextExtension = string( ".xml" );
+
+    void KSIOToolbox::AddConfigUserDirectory( const string& aDirectory )
     {
         TextFileIt TIt;
         for( TIt = fConfigTextFileMap.begin(); TIt != fConfigTextFileMap.end(); TIt++ )
@@ -157,7 +225,12 @@ namespace Kassiopeia
             TIt->second->AddToPaths( aDirectory );
         }
 
-        fConfigUserDir = aDirectory;
+        fConfigUserDirs.push_back( aDirectory );
+
+#ifdef KASSIOPEIA_IO_DEBUG_VERBOSE
+            iomsg < "KSIOToolbox::AddConfigUserDirectory";
+            iomsg( eDebug ) << "added config directory <" << aDirectory << ">" << eom;
+#endif
 
         return;
     }
@@ -168,16 +241,19 @@ namespace Kassiopeia
 
     void KSIOToolbox::AddDataTextFile( KSTextFile* aDataFile )
     {
-        TextFileIt TIt = fDataTextFileMap.find( aDataFile->GetKey() );
+        string aKey = aDataFile->GetKey();
+        TextFileIt TIt = fDataTextFileMap.find( aKey );
         if( TIt == fDataTextFileMap.end() )
         {
+            aDataFile->AddToBases( aKey + fDataTextExtension );
             aDataFile->AddToPaths( fDataDefaultDir );
-            if( fDataUserDir.empty() == kFALSE )
+            DirListIt DIt;
+            for( DIt = fDataUserDirs.begin(); DIt != fDataUserDirs.end(); DIt++ )
             {
-                aDataFile->AddToPaths( fDataUserDir );
+                TIt->second->AddToPaths( *DIt );
             }
 
-            fDataTextFileMap.insert( TextFileEntry( aDataFile->GetKey(), aDataFile ) );
+            fDataTextFileMap.insert( TextFileEntry( aKey, aDataFile ) );
         }
         return;
     }
@@ -200,12 +276,14 @@ namespace Kassiopeia
         else
         {
             KSTextFile* aDataFile = new KSTextFile();
-            aDataFile->SetKey( aKey );
 
+            aDataFile->SetKey( aKey );
+            aDataFile->AddToBases( aKey + fDataTextExtension );
             aDataFile->AddToPaths( fDataDefaultDir );
-            if( fDataUserDir.empty() == kFALSE )
+            DirListIt DIt;
+            for( DIt = fDataUserDirs.begin(); DIt != fDataUserDirs.end(); DIt++ )
             {
-                aDataFile->AddToPaths( fDataUserDir );
+                aDataFile->AddToPaths( *DIt );
             }
 
             fDataTextFileMap.insert( TextFileEntry( aDataFile->GetKey(), aDataFile ) );
@@ -213,15 +291,30 @@ namespace Kassiopeia
             return aDataFile;
         }
     }
+    void KSIOToolbox::RemoveDataTextFile( KSTextFile* aDataFile )
+    {
+        const string& aKey = aDataFile->GetKey();
+        TextFileIt TIt = fDataTextFileMap.find( aKey );
+        if( TIt != fDataTextFileMap.end() )
+        {
+            fDataTextFileMap.erase( TIt );
+        }
+        return;
+    }
+    const string KSIOToolbox::fDataTextExtension = string( ".dat" );
+
     void KSIOToolbox::AddDataRootFile( KSRootFile* aDataFile )
     {
+        const string& aKey = aDataFile->GetKey();
         RootFileIt RIt = fDataRootFileMap.find( aDataFile->GetKey() );
         if( RIt == fDataRootFileMap.end() )
         {
+            aDataFile->AddToBases( aKey + fDataRootExtension );
             aDataFile->AddToPaths( fDataDefaultDir );
-            if( fDataUserDir.empty() == kFALSE )
+            DirListIt DIt;
+            for( DIt = fDataUserDirs.begin(); DIt != fDataUserDirs.end(); DIt++ )
             {
-                aDataFile->AddToPaths( fDataUserDir );
+                aDataFile->AddToPaths( *DIt );
             }
 
             fDataRootFileMap.insert( RootFileEntry( aDataFile->GetKey(), aDataFile ) );
@@ -247,12 +340,13 @@ namespace Kassiopeia
         else
         {
             KSRootFile* aDataFile = new KSRootFile();
-            aDataFile->SetKey( aKey );
 
+            aDataFile->AddToBases( aKey + fDataRootExtension );
             aDataFile->AddToPaths( fDataDefaultDir );
-            if( fDataUserDir.empty() == kFALSE )
+            DirListIt DIt;
+            for( DIt = fDataUserDirs.begin(); DIt != fDataUserDirs.end(); DIt++ )
             {
-                aDataFile->AddToPaths( fDataUserDir );
+                aDataFile->AddToPaths( *DIt );
             }
 
             fDataRootFileMap.insert( RootFileEntry( aDataFile->GetKey(), aDataFile ) );
@@ -260,7 +354,19 @@ namespace Kassiopeia
             return aDataFile;
         }
     }
-    void KSIOToolbox::SetDataUserDirectory( const string& aDirectory )
+    void KSIOToolbox::RemoveDataRootFile( KSRootFile* aDataFile )
+    {
+        const string& aKey = aDataFile->GetKey();
+        RootFileIt TIt = fDataRootFileMap.find( aKey );
+        if( TIt != fDataRootFileMap.end() )
+        {
+            fDataRootFileMap.erase( TIt );
+        }
+        return;
+    }
+    const string KSIOToolbox::fDataRootExtension = string( ".root" );
+
+    void KSIOToolbox::AddDataUserDirectory( const string& aDirectory )
     {
         TextFileIt TIt;
         for( TIt = fDataTextFileMap.begin(); TIt != fDataTextFileMap.end(); TIt++ )
@@ -274,7 +380,7 @@ namespace Kassiopeia
             RIt->second->AddToPaths( aDirectory );
         }
 
-        fDataUserDir = aDirectory;
+        fDataUserDirs.push_back( aDirectory );
 
         return;
     }
@@ -285,16 +391,19 @@ namespace Kassiopeia
 
     void KSIOToolbox::AddScratchTextFile( KSTextFile* aScratchFile )
     {
-        TextFileIt TIt = fScratchTextFileMap.find( aScratchFile->GetKey() );
+        string aKey = aScratchFile->GetKey();
+        TextFileIt TIt = fScratchTextFileMap.find( aKey );
         if( TIt == fScratchTextFileMap.end() )
         {
+            aScratchFile->AddToBases( aKey + fScratchTextExtension );
             aScratchFile->AddToPaths( fScratchDefaultDir );
-            if( fScratchUserDir.empty() == kFALSE )
+            DirListIt DIt;
+            for( DIt = fScratchUserDirs.begin(); DIt != fScratchUserDirs.end(); DIt++ )
             {
-                aScratchFile->AddToPaths( fScratchUserDir );
+                TIt->second->AddToPaths( *DIt );
             }
 
-            fScratchTextFileMap.insert( TextFileEntry( aScratchFile->GetKey(), aScratchFile ) );
+            fScratchTextFileMap.insert( TextFileEntry( aKey, aScratchFile ) );
         }
         return;
     }
@@ -317,12 +426,14 @@ namespace Kassiopeia
         else
         {
             KSTextFile* aScratchFile = new KSTextFile();
-            aScratchFile->SetKey( aKey );
 
+            aScratchFile->SetKey( aKey );
+            aScratchFile->AddToBases( aKey + fScratchTextExtension );
             aScratchFile->AddToPaths( fScratchDefaultDir );
-            if( fScratchUserDir.empty() == kFALSE )
+            DirListIt DIt;
+            for( DIt = fScratchUserDirs.begin(); DIt != fScratchUserDirs.end(); DIt++ )
             {
-                aScratchFile->AddToPaths( fScratchUserDir );
+                aScratchFile->AddToPaths( *DIt );
             }
 
             fScratchTextFileMap.insert( TextFileEntry( aScratchFile->GetKey(), aScratchFile ) );
@@ -330,15 +441,30 @@ namespace Kassiopeia
             return aScratchFile;
         }
     }
+    void KSIOToolbox::RemoveScratchTextFile( KSTextFile* aScratchFile )
+    {
+        const string& aKey = aScratchFile->GetKey();
+        TextFileIt TIt = fScratchTextFileMap.find( aKey );
+        if( TIt != fScratchTextFileMap.end() )
+        {
+            fScratchTextFileMap.erase( TIt );
+        }
+        return;
+    }
+    const string KSIOToolbox::fScratchTextExtension = string( ".dat" );
+
     void KSIOToolbox::AddScratchRootFile( KSRootFile* aScratchFile )
     {
+        const string& aKey = aScratchFile->GetKey();
         RootFileIt RIt = fScratchRootFileMap.find( aScratchFile->GetKey() );
         if( RIt == fScratchRootFileMap.end() )
         {
+            aScratchFile->AddToBases( aKey + fScratchRootExtension );
             aScratchFile->AddToPaths( fScratchDefaultDir );
-            if( fScratchUserDir.empty() == kFALSE )
+            DirListIt DIt;
+            for( DIt = fScratchUserDirs.begin(); DIt != fScratchUserDirs.end(); DIt++ )
             {
-                aScratchFile->AddToPaths( fScratchUserDir );
+                aScratchFile->AddToPaths( *DIt );
             }
 
             fScratchRootFileMap.insert( RootFileEntry( aScratchFile->GetKey(), aScratchFile ) );
@@ -364,12 +490,13 @@ namespace Kassiopeia
         else
         {
             KSRootFile* aScratchFile = new KSRootFile();
-            aScratchFile->SetKey( aKey );
 
+            aScratchFile->AddToBases( aKey + fScratchRootExtension );
             aScratchFile->AddToPaths( fScratchDefaultDir );
-            if( fScratchUserDir.empty() == kFALSE )
+            DirListIt DIt;
+            for( DIt = fScratchUserDirs.begin(); DIt != fScratchUserDirs.end(); DIt++ )
             {
-                aScratchFile->AddToPaths( fScratchUserDir );
+                aScratchFile->AddToPaths( *DIt );
             }
 
             fScratchRootFileMap.insert( RootFileEntry( aScratchFile->GetKey(), aScratchFile ) );
@@ -377,7 +504,19 @@ namespace Kassiopeia
             return aScratchFile;
         }
     }
-    void KSIOToolbox::SetScratchUserDirectory( const string& aDirectory )
+    void KSIOToolbox::RemoveScratchRootFile( KSRootFile* aScratchFile )
+    {
+        const string& aKey = aScratchFile->GetKey();
+        RootFileIt TIt = fScratchRootFileMap.find( aKey );
+        if( TIt != fScratchRootFileMap.end() )
+        {
+            fScratchRootFileMap.erase( TIt );
+        }
+        return;
+    }
+    const string KSIOToolbox::fScratchRootExtension = string( ".root" );
+
+    void KSIOToolbox::AddScratchUserDirectory( const string& aDirectory )
     {
         TextFileIt TIt;
         for( TIt = fScratchTextFileMap.begin(); TIt != fScratchTextFileMap.end(); TIt++ )
@@ -391,8 +530,91 @@ namespace Kassiopeia
             RIt->second->AddToPaths( aDirectory );
         }
 
-        fScratchUserDir = aDirectory;
+        fScratchUserDirs.push_back( aDirectory );
 
+        return;
+    }
+
+    //********
+    //messages
+    //********
+
+    void KSIOToolbox::AddMessage( KSMessage* aMessage )
+    {
+        string aKey = aMessage->GetKey();
+        MessageIt TIt = fMessageMap.find( aKey );
+        if( TIt == fMessageMap.end() )
+        {
+            aMessage->SetTerminalVerbosity( fTerminalVerbosity );
+            aMessage->SetLogVerbosity( fLogVerbosity );
+            aMessage->SetLogFile( fLogTextFile );
+
+            fMessageMap.insert( MessageEntry( aMessage->GetKey(), aMessage ) );
+        }
+        return;
+    }
+    KSMessage* KSIOToolbox::GetMessage( const string& aKey )
+    {
+        MessageIt TIt = fMessageMap.find( aKey );
+        if( TIt != fMessageMap.end() )
+        {
+            return TIt->second;
+        }
+        return NULL;
+    }
+    KSMessage* KSIOToolbox::DemandMessage( const string& aKey )
+    {
+        MessageIt TIt = fMessageMap.find( aKey );
+        if( TIt != fMessageMap.end() )
+        {
+            return TIt->second;
+        }
+        else
+        {
+            KSMessage* aMessage = new KSMessage();
+
+            aMessage->SetKey( aKey );
+            aMessage->SetTerminalVerbosity( fTerminalVerbosity );
+            aMessage->SetLogVerbosity( fLogVerbosity );
+            aMessage->SetLogFile( fLogTextFile );
+
+            fMessageMap.insert( MessageEntry( aMessage->GetKey(), aMessage ) );
+
+            return aMessage;
+        }
+    }
+    void KSIOToolbox::RemoveMessage( KSMessage* aFile )
+    {
+        const string& aKey = aFile->GetKey();
+        MessageIt TIt = fMessageMap.find( aKey );
+        if( TIt != fMessageMap.end() )
+        {
+            fMessageMap.erase( TIt );
+        }
+        return;
+    }
+
+    void KSIOToolbox::SetTerminalVerbosity( const UInt_t& aVerbosity )
+    {
+        MessageIt MIt;
+        for( MIt = fMessageMap.begin(); MIt != fMessageMap.end(); MIt++ )
+        {
+            MIt->second->SetTerminalVerbosity( aVerbosity );
+        }
+
+        fTerminalVerbosity = aVerbosity;
+
+        return;
+    }
+    void KSIOToolbox::SetLogVerbosity( const UInt_t& aVerbosity )
+    {
+        MessageIt MIt;
+        for( MIt = fMessageMap.begin(); MIt != fMessageMap.end(); MIt++ )
+        {
+            MIt->second->SetLogVerbosity( aVerbosity );
+        }
+
+        fLogVerbosity = aVerbosity;
         return;
     }
 
@@ -437,62 +659,34 @@ namespace Kassiopeia
         return;
     }
 
-    //********
-    //messages
-    //********
+    //*********
+    //variables
+    //*********
 
-    void KSIOToolbox::AddMessage( KSMessage* aMessage )
+    void KSIOToolbox::AddVariable( const string& aName, const string& aValue )
     {
-        //iomsg + eWarning;
-        //iomsg < "KSIOToolbox::AddMessage" < end;
-        //iomsg << "message " << aMessage->GetKey() << " has been registered" << end;
-
-        MessageIt MIt = fMessageMap.find( aMessage->GetKey() );
-        if( MIt == fMessageMap.end() )
+        VariableIt It = fVariableMap.find( aName );
+        if( It == fVariableMap.end() )
         {
-            fMessageMap.insert( MessageEntry( aMessage->GetKey(), aMessage ) );
+            fVariableMap.insert( VariableEntry( aName, aValue ) );
+            return;
         }
-
-        aMessage->SetTerminalVerbosity( fTerminalVerbosity );
-        aMessage->SetLogVerbosity( fLogVerbosity );
-        aMessage->SetLogFile( fLogTextFile );
-
+        It->second = aValue;
         return;
     }
-    void KSIOToolbox::RemoveMessage( KSMessage* aMessage )
+    KSIOToolbox::VariableMap* KSIOToolbox::GetVariables()
     {
-        MessageIt MIt = fMessageMap.find( aMessage->GetKey() );
-        if( MIt != fMessageMap.end() )
-        {
-            fMessageMap.erase( MIt );
-        }
-
-        return;
-    }
-    void KSIOToolbox::SetTerminalVerbosity( const UInt_t& aVerbosity )
-    {
-        MessageIt MIt;
-        for( MIt = fMessageMap.begin(); MIt != fMessageMap.end(); MIt++ )
-        {
-            MIt->second->SetTerminalVerbosity( aVerbosity );
-        }
-
-        fTerminalVerbosity = aVerbosity;
-
-        return;
-    }
-    void KSIOToolbox::SetLogVerbosity( const UInt_t& aVerbosity )
-    {
-        MessageIt MIt;
-        for( MIt = fMessageMap.begin(); MIt != fMessageMap.end(); MIt++ )
-        {
-            MIt->second->SetLogVerbosity( aVerbosity );
-        }
-
-        fLogVerbosity = aVerbosity;
-        return;
+        return &fVariableMap;
     }
 
-//static KSIOManagerFactory sKSIOManagerFactory;
+    //*******************
+    //config file reading
+    //*******************
+
+    void KSIOToolbox::ProcessConfigFile( const string& aKey )
+    {
+        fTokenizer->ProcessFile( DemandConfigTextFile( aKey ) );
+        return;
+    }
 
 }

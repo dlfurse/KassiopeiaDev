@@ -130,7 +130,7 @@ namespace Kassiopeia
 
             Reset();
 
-            KSTokenizer* aNewTokenizer = new KSTokenizer( fTokenizer );
+            KSTokenizer* aNewTokenizer = new KSTokenizer();
             aNewTokenizer->ProcessFile( aFile );
             delete aNewTokenizer;
 
@@ -155,7 +155,7 @@ namespace Kassiopeia
 
             Reset();
 
-            KSTokenizer* aNewTokenizer = new KSTokenizer( fTokenizer );
+            KSTokenizer* aNewTokenizer = new KSTokenizer();
             aNewTokenizer->ProcessFile( aFile );
             delete aNewTokenizer;
 

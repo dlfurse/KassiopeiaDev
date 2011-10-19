@@ -1,6 +1,7 @@
 #ifndef KSIOTOOLBOX_H_
 #define KSIOTOOLBOX_H_
 
+#include "KSSingleton.h"
 #include "KSManager.h"
 #include "KSManagerFactory.h"
 
@@ -20,16 +21,22 @@ namespace Kassiopeia
     class KSTokenizer;
     class KSIncludeProcessor;
     class KSVariableProcessor;
+    class KSLoopProcessor;
+    class KSBuilderProcessor;
 
     class KSIOToolbox :
         public KSManager
     {
+            //*********
+            //singleton
+            //*********
+
         public:
             static KSIOToolbox* GetInstance();
-            virtual ~KSIOToolbox();
 
         private:
             KSIOToolbox();
+            virtual ~KSIOToolbox();
             static KSIOToolbox* fInstance;
 
             //****************
@@ -37,16 +44,20 @@ namespace Kassiopeia
             //****************
 
         protected:
-            virtual void SetupManagerSubclass() {}
-            virtual void PrepareManagerSubclass() {}
-            virtual void ShutdownManagerSubclass() {}
-            virtual void AbortManagerSubclass() {}
+            virtual void SetupManagerSubclass();
+            virtual void PrepareManagerSubclass();
+            virtual void ShutdownManagerSubclass();
+            virtual void AbortManagerSubclass();
 
             //************
             //map typedefs
             //************
 
         private:
+            typedef vector< string > DirList;
+            typedef DirList::iterator DirListIt;
+            typedef DirList::const_iterator DirListCIt;
+
             typedef map< string, KSTextFile* > TextFileMap;
             typedef TextFileMap::value_type TextFileEntry;
             typedef TextFileMap::iterator TextFileIt;
@@ -62,66 +73,99 @@ namespace Kassiopeia
             typedef MessageMap::iterator MessageIt;
             typedef MessageMap::const_iterator MessageCIt;
 
+            typedef map< string, string > VariableMap;
+            typedef VariableMap::value_type VariableEntry;
+            typedef VariableMap::iterator VariableIt;
+            typedef VariableMap::const_iterator VariableCIt;
+
             //*******************
             //configuration files
             //*******************
 
         public:
-            void AddConfigTextFile( KSTextFile* );
+            void AddConfigTextFile( KSTextFile* aConfigFile );
             KSTextFile* GetConfigTextFile( const string& aKey );
-            KSTextFile* DemandConfigFile( const string& aKey );
+            KSTextFile* DemandConfigTextFile( const string& aKey );
+            void RemoveConfigTextFile( KSTextFile* aConfigFile );
 
-            void SetConfigUserDirectory( const string& aDirectory );
+            void AddConfigUserDirectory( const string& aDirectory );
 
         private:
             TextFileMap fConfigTextFileMap;
 
-            string fConfigUserDir;
+            DirList fConfigUserDirs;
             string fConfigDefaultDir;
+            static const string fConfigTextExtension;
 
             //**********
             //data files
             //**********
 
         public:
-            void AddDataTextFile( KSTextFile* );
+            void AddDataTextFile( KSTextFile* aDataFile );
             KSTextFile* GetDataTextFile( const string& aKey );
             KSTextFile* DemandDataTextFile( const string& aKey );
+            void RemoveDataTextFile( KSTextFile* aDataFile );
 
-            void AddDataRootFile( KSRootFile* );
+            void AddDataRootFile( KSRootFile* aDataFile );
             KSRootFile* GetDataRootFile( const string& aKey );
             KSRootFile* DemandDataRootFile( const string& aKey );
+            void RemoveDataRootFile( KSRootFile* aDataFile );
 
-            void SetDataUserDirectory( const string& aDirectory );
+            void AddDataUserDirectory( const string& aDirectory );
 
         private:
             TextFileMap fDataTextFileMap;
             RootFileMap fDataRootFileMap;
 
-            string fDataUserDir;
+            DirList fDataUserDirs;
             string fDataDefaultDir;
+            static const string fDataTextExtension;
+            static const string fDataRootExtension;
 
             //*************
             //scratch files
             //*************
 
         public:
-            void AddScratchTextFile( KSTextFile* );
+            void AddScratchTextFile( KSTextFile* aScratchFile );
             KSTextFile* GetScratchTextFile( const string& aKey );
             KSTextFile* DemandScratchTextFile( const string& aKey );
+            void RemoveScratchTextFile( KSTextFile* aScratchFile );
 
-            void AddScratchRootFile( KSRootFile* );
+            void AddScratchRootFile( KSRootFile* aScratchFile );
             KSRootFile* GetScratchRootFile( const string& aKey );
             KSRootFile* DemandScratchRootFile( const string& aKey );
+            void RemoveScratchRootFile( KSRootFile* aScratchFile );
 
-            void SetScratchUserDirectory( const string& aDirectory );
+            void AddScratchUserDirectory( const string& aDirectory );
 
         private:
             TextFileMap fScratchTextFileMap;
             RootFileMap fScratchRootFileMap;
 
-            string fScratchUserDir;
+            DirList fScratchUserDirs;
             string fScratchDefaultDir;
+            static const string fScratchTextExtension;
+            static const string fScratchRootExtension;
+
+            //********
+            //messages
+            //********
+
+        public:
+            void AddMessage( KSMessage* aMessage );
+            KSMessage* GetMessage( const string& aMessage );
+            KSMessage* DemandMessage( const string& aMessage );
+            void RemoveMessage( KSMessage* aMessage );
+
+            void SetTerminalVerbosity( const UInt_t& aVerbosity );
+            void SetLogVerbosity( const UInt_t& aVerbosity );
+
+        private:
+            MessageMap fMessageMap;
+            UInt_t fTerminalVerbosity;
+            UInt_t fLogVerbosity;
 
             //***********
             //output file
@@ -132,7 +176,6 @@ namespace Kassiopeia
 
             void SetOutputUserBase( const string& aName );
             void SetOutputUserDirectory( const string& aDirectory );
-
 
         private:
             KSRootFile* fOutputRootFile;
@@ -160,33 +203,31 @@ namespace Kassiopeia
             string fLogUserDir;
             string fLogDefaultDir;
 
-            //********
-            //messages
-            //********
-
-        public:
-            void AddMessage( KSMessage* aMessage );
-            void RemoveMessage( KSMessage* aMessage );
-
-            void SetTerminalVerbosity( const UInt_t& aVerbosity );
-            void SetLogVerbosity( const UInt_t& aVerbosity );
-
-        private:
-            MessageMap fMessageMap;
-            UInt_t fTerminalVerbosity;
-            UInt_t fLogVerbosity;
-
             //*********
             //variables
             //*********
 
+        public:
+            void AddVariable( const string& aName, const string& aValue );
+            VariableMap* GetVariables();
+
+        private:
+            VariableMap fVariableMap;
+
+            //*******************
+            //config file reading
+            //*******************
+
+        public:
+            void ProcessConfigFile( const string& aKey );
+
         private:
             KSTokenizer* fTokenizer;
-            KSIncludeProcessor* fIncludeProcessor;
             KSVariableProcessor* fVariableProcessor;
+            KSIncludeProcessor* fIncludeProcessor;
+            KSLoopProcessor* fLoopProcessor;
+            KSBuilderProcessor* fBuilderProcessor;
     };
-
-    //typedef KSManagerFactoryPrototype< KSIOToolbox > KSIOManagerFactory;
 
 }
 

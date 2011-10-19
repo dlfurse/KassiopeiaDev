@@ -68,6 +68,12 @@ TestStepComputer_CPPFLAGS = $(VALIDATION_COMPILER_FLAGS)
 TestStepComputer_LDADD = $(VALIDATION_LIBS)
 TestStepComputer_LDFLAGS = $(VALIDATION_LINKER_FLAGS)
 
+bin_PROGRAMS += TestIOToolbox
+TestIOToolbox_SOURCES = ../Source/TestIOToolbox.cxx
+TestIOToolbox_CPPFLAGS = $(VALIDATION_COMPILER_FLAGS)
+TestIOToolbox_LDADD = $(VALIDATION_LIBS)
+TestIOToolbox_LDFLAGS = $(VALIDATION_LINKER_FLAGS)
+
 ###########################################
 
 CLEANFILES = 

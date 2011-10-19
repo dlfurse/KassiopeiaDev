@@ -35,16 +35,16 @@ namespace Kassiopeia
 
     void KSManagerFactoryTable::Register( KSManagerFactory* aManagerFactory )
     {
-        FactoryIt It = fMap.find( aManagerFactory->GetTypeName() );
+        FactoryIt It = fMap.find( aManagerFactory->GetManagerKey() );
         if( It != fMap.end() )
         {
-            fMap.insert( FactoryEntry( aManagerFactory->GetTypeName(), aManagerFactory ) );
+            fMap.insert( FactoryEntry( aManagerFactory->GetManagerKey(), aManagerFactory ) );
         }
         return;
     }
     void KSManagerFactoryTable::Unregister( KSManagerFactory* aManagerFactory )
     {
-        FactoryIt It = fMap.find( aManagerFactory->GetTypeName() );
+        FactoryIt It = fMap.find( aManagerFactory->GetManagerKey() );
         if( It != fMap.end() )
         {
             fMap.erase( It );

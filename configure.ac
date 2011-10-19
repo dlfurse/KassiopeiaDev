@@ -76,6 +76,9 @@ AC_PREFIX_DEFAULT([`pwd`])
 PREFIX=`test "$prefix" = NONE && prefix=$ac_default_prefix; eval echo "${prefix}"`
 AC_SUBST(PREFIX)
 
+#define default directories
+ksconfigdir=${PREFIX}/Config
+AC_SUBST(ksconfigdir)
 
 #define compiler and linker flags for automake
 AM_CPPFLAGS="$DEFS -g $DEBUG_FLAGS $ROOT_CPPFLAGS $BOOST_CPPFLAGS -DKASSIOPEIA_CONFIG_DEFAULT_DIR=${PREFIX}/Config -DKASSIOPEIA_DATA_DEFAULT_DIR=${PREFIX}/Data -DKASSIOPEIA_SCRATCH_DEFAULT_DIR=${PREFIX}/Data -DKASSIOPEIA_OUTPUT_DEFAULT_DIR=. -DKASSIOPEIA_LOG_DEFAULT_DIR=." 

@@ -32,11 +32,20 @@ namespace Kassiopeia
         {
             return It->second;
         }
+        return NULL;
+    }
+    KSManager* KSManagerInstanceTable::DemandManager( const string& aTypeName )
+    {
+        FactoryIt It = fMap.find( aTypeName );
+        if( It != fMap.end() )
+        {
+            return It->second;
+        }
 
         KSManagerFactory* aFactory = KSManagerFactoryTable::GetInstance()->GetFactory( aTypeName );
         if( aFactory != NULL )
         {
-            return aFactory->Build();
+            return aFactory->BuildManager();
         }
 
         return NULL;

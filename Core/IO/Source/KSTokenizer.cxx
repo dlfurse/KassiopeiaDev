@@ -2,10 +2,6 @@
 
 #include "KSTextFile.h"
 
-#include <iostream>
-using std::endl;
-using std::cout;
-
 namespace Kassiopeia
 {
 
@@ -30,54 +26,25 @@ namespace Kassiopeia
 
         fNameBuffer( "" ),
         fValueBuffer( "" ),
-        fErrorBuffer( "" ),
-        fBeginParsing( new KSTokenBeginParsing() ),
-        fEndParsing( new KSTokenEndParsing() ),
-        fBeginFile( new KSTokenBeginFile() ),
-        fEndFile( new KSTokenEndFile() ),
-        fBeginElement( new KSTokenBeginElement() ),
-        fEndElement( new KSTokenEndElement() ),
-        fAttribute( new KSTokenAttribute() ),
-        fData( new KSTokenData() ),
-        fError( new KSTokenError() )
+        fErrorBuffer( "" )
     {
-        fTokenizer = this;
-    }
-    KSTokenizer::KSTokenizer( KSTokenizer* anActiveTokenizer ) :
-        KSProcessor(),
-
-        fOldTokenizer( anActiveTokenizer ),
-
-        fFile( NULL ),
-        fPath( "" ),
-        fName( "" ),
-        fLine( 0 ),
-        fColumn( 0 ),
-        fChar( '\0' ),
-
-        fState(),
-        fInitialState( &KSTokenizer::ParseBeginFile ),
-        fFinalState( &KSTokenizer::ParseCompleteFile ),
-        fElementStack(),
-
-        fNameBuffer( "" ),
-        fValueBuffer( "" ),
-        fErrorBuffer( "" ),
-        fBeginParsing( new KSTokenBeginParsing() ),
-        fEndParsing( new KSTokenEndParsing() ),
-        fBeginFile( new KSTokenBeginFile() ),
-        fEndFile( new KSTokenEndFile() ),
-        fBeginElement( new KSTokenBeginElement() ),
-        fEndElement( new KSTokenEndElement() ),
-        fAttribute( new KSTokenAttribute() ),
-        fData( new KSTokenData() ),
-        fError( new KSTokenError() )
-    {
-        DropProcessor( fOldTokenizer );
+        fBeginParsing = new KSTokenBeginParsing();
+        fEndParsing = new KSTokenEndParsing();
+        fBeginFile = new KSTokenBeginFile();
+        fEndFile = new KSTokenEndFile();
+        fBeginElement = new KSTokenBeginElement();
+        fEndElement = new KSTokenEndElement();
+        fAttribute = new KSTokenAttribute();
+        fData = new KSTokenData();
+        fError = new KSTokenError();
 
         fTokenizer = this;
+        if( fOldTokenizer != NULL )
+        {
+            fOldTokenizer->fParent = this;
+            this->fChild = fOldTokenizer;
+        }
     }
-
     KSTokenizer::~KSTokenizer()
     {
         delete fBeginParsing;
@@ -91,7 +58,11 @@ namespace Kassiopeia
         delete fError;
 
         fTokenizer = fOldTokenizer;
-        fOldTokenizer = NULL;
+        if( fOldTokenizer != NULL )
+        {
+            fOldTokenizer->fParent = NULL;
+            this->fChild = NULL;
+        }
     }
 
     void KSTokenizer::ProcessFile( KSTextFile* aFile )

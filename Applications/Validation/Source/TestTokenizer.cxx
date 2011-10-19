@@ -5,6 +5,9 @@
 #include "KSVariableProcessor.h"
 #include "KSLoopProcessor.h"
 #include "KSIncludeProcessor.h"
+#include "KSBuilderProcessor.h"
+#include "KSToolboxModuleBuilder.h"
+#include "KSElement.h"
 
 #include <iostream>
 using std::cout;
@@ -12,18 +15,29 @@ using std::endl;
 
 namespace Kassiopeia
 {
-    class KSTestProcessor :
-        public KSProcessor
+    class KSTestBuilder :
+        public KSToolboxModuleBuilder< KSIOToolbox, KSTestBuilder >
     {
         public:
-            KSTestProcessor()
+            KSTestBuilder()
             {
             }
-            virtual ~KSTestProcessor()
+            virtual ~KSTestBuilder()
             {
+                cout << "test builder is dying!" << endl;
             }
 
         public:
+            virtual Bool_t Start()
+            {
+                return kTRUE;
+            }
+            virtual Bool_t End()
+            {
+                return kTRUE;
+            }
+
+
             virtual void ProcessToken( KSTokenBeginParsing* /*token*/)
             {
                 cout << "got a begin parsing token." << endl;
@@ -51,6 +65,11 @@ namespace Kassiopeia
             }
             virtual void ProcessToken( KSTokenEndElement* token )
             {
+                if( token->GetElementName() == string("test") )
+                {
+                    KSBuilder::ProcessToken( token );
+                    return;
+                }
                 cout << "got an end element token [element name = " << token->GetElementName() << "]" << endl;
                 return;
             }
@@ -71,6 +90,8 @@ namespace Kassiopeia
                 return;
             }
     };
+
+    KSElement< KSBuilderProcessor, KSTestBuilder > sKSTestBuilderElement("test");
 }
 
 using namespace Kassiopeia;
@@ -79,6 +100,8 @@ int main( int argc, char** argv )
 {
     string FileName;
     string IncludedFileName;
+
+    cout << "i am alive!" << endl;
 
     if( argc < 2 )
     {
@@ -118,8 +141,8 @@ int main( int argc, char** argv )
     Tokenizer.DropProcessor( &LoopProcessor );
     KSIncludeProcessor IncludeProcessor;
     Tokenizer.DropProcessor( &IncludeProcessor );
-    KSTestProcessor TestProcessor;
-    Tokenizer.DropProcessor( &TestProcessor );
+    KSBuilderProcessor BuilderProcessor;
+    Tokenizer.DropProcessor( &BuilderProcessor );
 
     cout << "parsing file..." << endl;
 

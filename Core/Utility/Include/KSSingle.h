@@ -15,6 +15,9 @@ namespace Kassiopeia
     };
 
     template< class XType >
+    XType* KSSingle< XType >::fAddress = NULL;
+
+    template< class XType >
     KSSingle< XType >::KSSingle()
     {
         if( fAddress == NULL )
@@ -26,9 +29,6 @@ namespace Kassiopeia
     KSSingle< XType >::~KSSingle()
     {
     }
-
-    template< class XType >
-    XType* KSSingle< XType >::fAddress = NULL;
 
 }
 

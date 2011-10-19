@@ -11,20 +11,6 @@ namespace Kassiopeia
         public KSToolboxBuilder< XToolboxType >
     {
         public:
-            template< class XSubModuleType >
-            friend class Element;
-
-            template< class XSubModuleType >
-            class Element
-            {
-                public:
-                    Element( const string& aKey );
-                    ~Element();
-
-                    static KSBuilder* Create();
-            };
-
-        public:
             KSToolboxModuleBuilder();
             virtual ~KSToolboxModuleBuilder();
 
@@ -61,24 +47,6 @@ namespace Kassiopeia
     }
     template< class XToolboxType, class XModuleType >
     KSBuilder::FactoryMap KSToolboxModuleBuilder< XToolboxType, XModuleType >::fStaticMap = KSBuilder::FactoryMap();
-
-    template< class XToolboxType, class XModuleType >
-    template< class XSubModuleType >
-    KSToolboxModuleBuilder< XToolboxType, XModuleType >::Element< XSubModuleType >::Element( const string& aKey )
-    {
-        KSToolboxModuleBuilder< XToolboxType, XModuleType >::SetElement( aKey, &Create );
-    }
-    template< class XToolboxType, class XModuleType >
-    template< class XSubModuleType >
-    KSToolboxModuleBuilder< XToolboxType, XModuleType >::Element< XSubModuleType >::~Element()
-    {
-    }
-    template< class XToolboxType, class XModuleType >
-    template< class XSubModuleType >
-    KSBuilder* KSToolboxModuleBuilder< XToolboxType, XModuleType >::Element< XSubModuleType >::Create()
-    {
-        return new XSubModuleType();
-    }
 }
 
 #endif

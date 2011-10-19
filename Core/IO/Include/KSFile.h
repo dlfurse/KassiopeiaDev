@@ -22,6 +22,10 @@ namespace Kassiopeia
             void SetKey( const string& aKey );
             const string& GetKey() const;
 
+        protected:
+            string fKey;
+
+        public:
             void AddToPaths( const string& aPath );
             void AddToBases( const string& aBase );
             void AddToNames( const string& aName );
@@ -30,7 +34,6 @@ namespace Kassiopeia
             const string& GetName() const;
 
         protected:
-            string fKey;
             vector< string > fPaths;
             vector< string > fBases;
             vector< string > fNames;

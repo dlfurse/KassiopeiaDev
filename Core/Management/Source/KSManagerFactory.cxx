@@ -4,14 +4,24 @@
 namespace Kassiopeia
 {
 
-    KSManagerFactory::KSManagerFactory()
+    KSManagerFactory::KSManagerFactory( const string& aKey, KSManager* (*aConstructor)() )
     {
+        fKey = aKey;
+        fConstructor = aConstructor;
         KSManagerFactoryTable::GetInstance()->Register( this );
     }
-
     KSManagerFactory::~KSManagerFactory()
     {
         KSManagerFactoryTable::GetInstance()->Unregister( this );
+    }
+
+    const string& KSManagerFactory::GetManagerKey() const
+    {
+        return fKey;
+    }
+    KSManager* KSManagerFactory::BuildManager() const
+    {
+        return (*fConstructor)();
     }
 
 }

@@ -24,17 +24,18 @@ namespace Kassiopeia
 
         public:
             KSManager* GetManager( const string& aTypeName );
+            KSManager* DemandManager( const string& aTypeName );
 
             void Register( KSManager* KSManager );
             void Unregister( KSManager* KSManager );
 
         private:
-            typedef map< string, KSManager* > FactoryMap;
-            typedef FactoryMap::value_type FactoryEntry;
-            typedef FactoryMap::iterator FactoryIt;
-            typedef FactoryMap::const_iterator FactoryCIt;
+            typedef map< string, KSManager* > ManagerMap;
+            typedef ManagerMap::value_type FactoryEntry;
+            typedef ManagerMap::iterator FactoryIt;
+            typedef ManagerMap::const_iterator FactoryCIt;
 
-            FactoryMap fMap;
+            ManagerMap fMap;
     };
 
 }

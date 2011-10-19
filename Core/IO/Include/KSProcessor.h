@@ -24,8 +24,8 @@ namespace Kassiopeia
             KSProcessor();
             virtual ~KSProcessor();
 
-            void DropProcessor( KSProcessor* aNewProcessor );
-            void LiftProcessor( KSProcessor* anOldProcessor );
+            virtual void DropProcessor( KSProcessor* aNewProcessor );
+            virtual void LiftProcessor( KSProcessor* anOldProcessor );
 
             virtual void ProcessToken( KSTokenBeginParsing* aToken );
             virtual void ProcessToken( KSTokenEndParsing* aToken );
@@ -38,26 +38,6 @@ namespace Kassiopeia
             virtual void ProcessToken( KSTokenError* aToken );
 
         protected:
-            virtual Bool_t ProcessStreamToken( KSTokenBeginParsing* aToken );
-            virtual Bool_t ProcessStreamToken( KSTokenEndParsing* aToken );
-            virtual Bool_t ProcessStreamToken( KSTokenBeginFile* aToken );
-            virtual Bool_t ProcessStreamToken( KSTokenEndFile* aToken );
-            virtual Bool_t ProcessStreamToken( KSTokenBeginElement* aToken );
-            virtual Bool_t ProcessStreamToken( KSTokenEndElement* aToken );
-            virtual Bool_t ProcessStreamToken( KSTokenAttribute* aToken );
-            virtual Bool_t ProcessStreamToken( KSTokenData* aToken );
-            virtual Bool_t ProcessStreamToken( KSTokenError* aToken );
-
-            virtual Bool_t ProcessEndToken( KSTokenBeginParsing* aToken );
-            virtual Bool_t ProcessEndToken( KSTokenEndParsing* aToken );
-            virtual Bool_t ProcessEndToken( KSTokenBeginFile* aToken );
-            virtual Bool_t ProcessEndToken( KSTokenEndFile* aToken );
-            virtual Bool_t ProcessEndToken( KSTokenBeginElement* aToken );
-            virtual Bool_t ProcessEndToken( KSTokenEndElement* aToken );
-            virtual Bool_t ProcessEndToken( KSTokenAttribute* aToken );
-            virtual Bool_t ProcessEndToken( KSTokenData* aToken );
-            virtual Bool_t ProcessEndToken( KSTokenError* aToken );
-
             KSProcessor* fParent;
             KSProcessor* fChild;
 

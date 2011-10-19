@@ -3,6 +3,9 @@
 
 #include "KSProcessor.h"
 
+#include <map>
+using std::map;
+
 namespace Kassiopeia
 {
 
@@ -14,15 +17,24 @@ namespace Kassiopeia
             virtual ~KSBuilder();
 
         public:
-            void SetBuilderSystemKey( const string& aKey );
-            const string& GetBuilderSystemKey() const;
+            virtual void ProcessToken( KSTokenBeginElement* aToken );
+            virtual void ProcessToken( KSTokenEndElement* aToken );
+            virtual void ProcessToken( KSTokenAttribute* aToken );
+            virtual void ProcessToken( KSTokenData* aToken );
 
-            void SetBuilderKey( const string& aKey );
-            const string& GetBuilderKey() const;
+        protected:
+            virtual Bool_t Start();
+            virtual Bool_t AddAttribute( KSTokenAttribute* aToken );
+            virtual Bool_t AddData( KSTokenData* aToken );
+            virtual Bool_t End();
 
-        private:
-            string fBuilderSystemKey;
-            string fBuilderKey;
+        protected:
+            typedef map< string, KSBuilder* (*)() > FactoryMap;
+            typedef FactoryMap::value_type FactoryEntry;
+            typedef FactoryMap::iterator FactoryIt;
+            typedef FactoryMap::const_iterator FactoryCIt;
+
+            FactoryMap* fMap;
     };
 
 }

@@ -31,9 +31,8 @@ namespace Kassiopeia
                 fFile = new fstream( (*NameIt).c_str(), ios_base::app );
             }
 
-            iomsg + eDebug;
             iomsg < "KSTextFile::Open";
-            iomsg << "key <" << fKey << "> attempting at <" << *NameIt << ">" << eom;
+            iomsg( eDebug ) << "key <" << fKey << "> attempting at <" << *NameIt << ">" << eom;
 
             if( fFile->fail() == kTRUE )
             {
@@ -42,13 +41,12 @@ namespace Kassiopeia
                 continue;
             }
 
-            fResolvedPath = (*NameIt).substr(0,(*NameIt).find_last_of( fDirectoryMark ));
-            fResolvedBase = (*NameIt).substr((*NameIt).find_last_of( fDirectoryMark ) + 1);
+            fResolvedPath = (*NameIt).substr( 0, (*NameIt).find_last_of( fDirectoryMark ) );
+            fResolvedBase = (*NameIt).substr( (*NameIt).find_last_of( fDirectoryMark ) + 1 );
             fResolvedName = *NameIt;
 
-            iomsg + eNormal;
             iomsg < "KSTextFile::Open";
-            iomsg << "key <" << fKey << "> successfully associated with file <" << fResolvedName << ">" << eom;
+            iomsg( eDebug ) << "key <" << fKey << "> successfully associated with file <" << fResolvedName << ">" << eom;
 
             return kTRUE;
         }
@@ -72,9 +70,8 @@ namespace Kassiopeia
                     fFile = new fstream( (*PathIt + fDirectoryMark + *BaseIt).c_str(), ios_base::app );
                 }
 
-                iomsg + eDebug;
                 iomsg < "KSTextFile::Open";
-                iomsg << "key <" << fKey << "> attempting at <" << *PathIt << fDirectoryMark << *BaseIt << ">" << eom;
+                iomsg( eDebug ) << "key <" << fKey << "> attempting at <" << *PathIt << fDirectoryMark << *BaseIt << ">" << eom;
 
                 if( fFile->fail() == kTRUE )
                 {
@@ -87,18 +84,16 @@ namespace Kassiopeia
                 fResolvedBase = *BaseIt;
                 fResolvedName = *PathIt + fDirectoryMark + *BaseIt;
 
-                iomsg + eNormal;
                 iomsg < "KSTextFile::Open";
-                iomsg << "key <" << fKey << "> successfully associated with file <" << fResolvedName << ">" << eom;
+                iomsg( eDebug ) << "key <" << fKey << "> successfully associated with file <" << fResolvedName << ">" << eom;
 
                 return kTRUE;
 
             }
         }
 
-        iomsg + eWarning;
         iomsg < "KSTextFile::Open";
-        iomsg << "key <" << fKey << "> could not be associated with any file" << eom;
+        iomsg( eWarning ) << "key <" << fKey << "> could not be associated with any file" << eom;
 
         return kFALSE;
     }

@@ -39,11 +39,8 @@ namespace Kassiopeia
     class KSMessage
     {
         public:
-            KSMessage( const string& aKey );
-            virtual ~KSMessage();
-
-        private:
             KSMessage();
+            virtual ~KSMessage();
 
             //**************
             //identification
@@ -51,6 +48,7 @@ namespace Kassiopeia
 
         public:
             const string& GetKey();
+            void SetKey( const string& aKey );
 
         protected:
             string fKey;
@@ -61,6 +59,7 @@ namespace Kassiopeia
 
         public:
             KSMessage& operator+( const KSMessageSeverity& aSeverity );
+            KSMessage& operator() ( const KSMessageSeverity& aSeverity );
 
             KSMessage& operator<( const KSMessageNewline& );
             KSMessage& operator<( const KSMessageEnd& );
@@ -81,7 +80,8 @@ namespace Kassiopeia
             }
 
         private:
-            void Print();
+            void SetSeverity( const KSMessageSeverity& aSeverity );
+            void Flush();
 
         protected:
             string fSystemDescription;

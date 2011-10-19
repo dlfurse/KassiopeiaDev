@@ -10,7 +10,6 @@ namespace Kassiopeia
 
     KSVariableProcessor::KSVariableProcessor() :
         KSProcessor(),
-        fGlobalMap( new VariableMap() ),
         fFileMap( new VariableMap() ),
         fFileMapStack()
     {
@@ -19,7 +18,6 @@ namespace Kassiopeia
 
     KSVariableProcessor::~KSVariableProcessor()
     {
-        delete fGlobalMap;
         delete fFileMap;
     }
 
@@ -93,10 +91,12 @@ namespace Kassiopeia
     }
     void KSVariableProcessor::ProcessToken( KSTokenEndElement* aToken )
     {
+        VariableMap* GlobalMap = KSIOToolbox::GetInstance()->GetVariables();
+
         if( fState == eActiveDefine )
         {
-            VariableIt GlobalIt = fGlobalMap->find( fName );
-            if( GlobalIt == fGlobalMap->end() )
+            VariableIt GlobalIt = GlobalMap->find( fName );
+            if( GlobalIt == GlobalMap->end() )
             {
                 VariableIt FileIt = fFileMap->find( fName );
                 if( FileIt == fFileMap->end() )
@@ -132,8 +132,8 @@ namespace Kassiopeia
             }
             else
             {
-                VariableIt GlobalIt = fGlobalMap->find( fName );
-                if( GlobalIt != fGlobalMap->end() )
+                VariableIt GlobalIt = GlobalMap->find( fName );
+                if( GlobalIt != GlobalMap->end() )
                 {
                     iomsg + eWarning;
                     iomsg < "KSVariableProcessor::ProcessToken";
@@ -272,6 +272,7 @@ namespace Kassiopeia
     bool KSVariableProcessor::Evaluate( string& aString )
     {
         bool BracketFound = false;
+        VariableMap* GlobalMap = KSIOToolbox::GetInstance()->GetVariables();
 
         string Buffer;
         stack< string > BufferStack;
@@ -302,8 +303,8 @@ namespace Kassiopeia
                     return false;
                 }
 
-                VariableIt GlobalVariable = fGlobalMap->find( Buffer );
-                if( GlobalVariable != fGlobalMap->end() )
+                VariableIt GlobalVariable = GlobalMap->find( Buffer );
+                if( GlobalVariable != GlobalMap->end() )
                 {
                     Buffer = GlobalVariable->second;
                 }

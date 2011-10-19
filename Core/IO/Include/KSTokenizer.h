@@ -6,6 +6,9 @@
 #include <stack>
 using std::stack;
 
+#include <vector>
+using std::vector;
+
 namespace Kassiopeia
 {
 
@@ -16,7 +19,6 @@ namespace Kassiopeia
     {
         public:
             KSTokenizer();
-            KSTokenizer( KSTokenizer* anActiveTokenizer );
             virtual ~KSTokenizer();
 
         private:
